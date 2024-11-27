@@ -95,13 +95,38 @@ document.getElementById('assetType').addEventListener('change', function () {
 
 // 과거 증여 금액 추가
 document.getElementById('addGiftButton').addEventListener('click', function () {
-    const previousGifts = document.getElementById('previousGifts');
-    const inputField = document.createElement('input');
-    inputField.type = 'text';
-    inputField.placeholder = '예: 10,000,000';
-    inputField.style.marginBottom = "10px";
-    previousGifts.appendChild(inputField);
+    const container = document.getElementById('previousGifts');
+    const newGiftEntry = document.createElement('div');
+    newGiftEntry.style.marginBottom = '10px'; // 각 항목 간격 설정
+    newGiftEntry.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="text" name="pastGiftAmount" placeholder="금액 입력"
+                class="amount-input"
+                style="flex: 2; padding: 5px; border: 1px solid #ddd; border-radius: 5px; height: 40px;">
+            <input type="date" name="pastGiftDate"
+                style="flex: 1; padding: 5px; border: 1px solid #ddd; border-radius: 5px; height: 40px;">
+            <button type="button" class="removeGiftButton"
+                style="background-color: #f44336; color: white; border: none; padding: 0 10px; cursor: pointer; 
+                border-radius: 5px; height: 40px; line-height: 40px; text-align: center; width: auto;">삭제</button>
+        </div>
+    `;
+
+    // 삭제 버튼 동작 추가
+    newGiftEntry.querySelector('.removeGiftButton').addEventListener('click', function () {
+        container.removeChild(newGiftEntry);
+    });
+
+    // 금액 입력 필드에 콤마 처리 추가
+    newGiftEntry.querySelector('.amount-input').addEventListener('input', function (e) {
+        const value = e.target.value.replace(/,/g, ''); // 기존 콤마 제거
+        if (!isNaN(value)) {
+            e.target.value = Number(value).toLocaleString(); // 숫자를 콤마로 포맷팅
+        }
+    });
+
+    container.appendChild(newGiftEntry); // 컨테이너에 입력 필드 추가
 });
+
 
 // 결과 출력
 document.getElementById('taxForm').onsubmit = function (e) {
