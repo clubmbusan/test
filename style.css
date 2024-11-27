@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 20px; /* 상하좌우 여백 추가 */
+    padding: 0;
+}
+
+.calculator {
+    max-width: 600px; /* 컨테이너 최대 너비 */
+    width: 90%; /* 화면 크기에 따라 유동적으로 조정 */
+    margin: 50px auto; /* 화면 중앙 정렬 */
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px; /* 라벨 간격 */
+}
+
+form input, form select, form button {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form select {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* 녹색 버튼 크기 조정 */
+button#addGiftButton, button#button-calculate {
+    width: 100%; /* 다른 입력창과 동일한 너비 */
+    padding: 10px; /* 입력 필드와 동일한 여백 */
+    margin-bottom: 15px; /* 아래 여백 추가 */
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px; /* 모서리 둥글게 */
+    font-size: 14px; /* 입력 필드와 일치하는 텍스트 크기 */
+    cursor: pointer;
+    box-sizing: border-box; /* 크기 계산 통일 */
+}
+
+button#addGiftButton:hover, button#button-calculate:hover {
+    background-color: #218838; /* 호버 시 색상 변경 */
+}
+
+/* 상단 제목 크기 조정 */
+h1 {
+    font-size: 24px; /* 글자 크기 줄이기 */
+    text-align: center; /* 중앙 정렬 유지 */
+    margin-bottom: 20px;
+    color: #333; /* 글씨 색상 추가 */
+}
