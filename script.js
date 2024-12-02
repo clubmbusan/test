@@ -52,19 +52,22 @@ function calculateLatePenalty(submissionDate, giftDate, giftTax) {
 // 증여세 계산 로직
 function calculateGiftTax(taxableAmount) {
     let tax = 0;
+    let previousLimit = 0; // 이전 구간의 한도를 초기화
+
+    // 누진세율을 각 구간에 맞게 계산
     for (let i = 0; i < taxBrackets.length; i++) {
         const bracket = taxBrackets[i];
-        const prevLimit = taxBrackets[i - 1]?.limit || 0;
 
+        // 현재 구간의 금액이 해당 구간의 한도를 초과하면 초과 부분에 대해 세금 계산
         if (taxableAmount > bracket.limit) {
-            tax += (bracket.limit - prevLimit) * (bracket.rate / 100);
+            tax += (bracket.limit - previousLimit) * (bracket.rate / 100); // 한 구간 내 금액에 대해 세금 적용
+            previousLimit = bracket.limit; // 이전 한도 갱신
         } else {
-            tax += (taxableAmount - prevLimit) * (bracket.rate / 100);
-            tax -= bracket.deduction;
+            tax += (taxableAmount - previousLimit) * (bracket.rate / 100); // 마지막 구간의 나머지 금액에 대해 세금 적용
             break;
         }
     }
-    return Math.max(tax, 0);
+    return Math.max(tax, 0); // 세금이 음수로 나오지 않도록 0 이상으로 처리
 }
 
 // 재산 유형에 따라 입력 필드 표시
@@ -161,6 +164,9 @@ document.getElementById('taxForm').onsubmit = function (e) {
 
     // 증여세 계산
     const giftTax = calculateGiftTax(taxableAmount);
+
+    // 가산세
+
 
     // 가산세 계산
     const giftDate = document.getElementById('giftDate')?.value;
