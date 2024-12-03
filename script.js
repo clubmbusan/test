@@ -6,7 +6,14 @@ const taxBrackets = [
     { limit: 3000000000, rate: 40, deduction: 160000000 },
     { limit: Infinity, rate: 50, deduction: 460000000 }
 ];
-
+// 관계별 공제 한도 정의
+const exemptionLimits = {
+    adult: 50000000,         // 기본 성년자 공제
+    minor: 20000000,         // 미성년자 공제
+    spouse: 600000000,       // 배우자 공제
+    sonInLaw: 50000000,      // 사위, 며느리 공제
+    others: 10000000         // 기타 타인 공제
+};
 // 금액 입력 시 콤마 처리
 function parseCurrency(value) {
     return parseInt(value.replace(/,/g, ''), 10) || 0;
@@ -19,7 +26,20 @@ document.addEventListener('input', function (e) {
             .replace(/\B(?=(\d{3})+(?!\d))/g, ','); // 콤마 추가
     }
 });
+// 관계 선택에 따른 공제 한도 결정
+const relationship = document.getElementById('relationship').value;
+console.log('선택된 관계:', relationship); // 관계 값 확인
 
+const exemptionLimit = exemptionLimits[relationship] || 0;
+console.log('적용된 공제 한도:', exemptionLimit); // 공제 한도 확인
+
+// 과세 표준 계산
+const taxableAmount = Math.max(giftAmount - exemptionLimit - previousGiftTotal, 0);
+console.log('과세 표준:', taxableAmount); // 과세 표준 확인
+
+// 증여세 계산
+const giftTax = calculateGiftTax(taxableAmount);
+console.log('계산된 증여세:', giftTax); // 계산된 증여세 확인
 // 가산세 계산 (수정된 함수)
 function calculateLatePenalty(submissionDate, giftDate, giftTax) {
     const giftDateObj = new Date(giftDate);
@@ -138,7 +158,7 @@ document.getElementById('taxForm').onsubmit = function (e) {
     // 재산 유형에 따른 금액 계산
     const selectedType = document.getElementById('assetType').value;
     let giftAmount = 0;
-
+// 선택된 재산 유형에 따라 증여 금액 계산
     if (selectedType === 'cash') {
         giftAmount = parseCurrency(document.getElementById('cashAmount')?.value || '0');
     } else if (selectedType === 'realEstate') {
@@ -150,24 +170,40 @@ document.getElementById('taxForm').onsubmit = function (e) {
     }
 
     // 과거 증여 금액 합산
-    const previousGiftInputs = document.getElementById('previousGifts').querySelectorAll('input');
-    let previousGiftTotal = 0;
-    previousGiftInputs.forEach(input => {
-        const value = parseCurrency(input.value || '0');
-        if (!isNaN(value)) {
-            previousGiftTotal += value;
-        }
-    });
+const previousGiftInputs = document.getElementById('previousGifts').querySelectorAll('input');
+let previousGiftTotal = 0;
+previousGiftInputs.forEach(input => {
+    const value = parseCurrency(input.value || '0');
+    if (!isNaN(value)) {
+        previousGiftTotal += value;
+    }
+});
 
-    const exemptionLimit = 50000000; // 기본 공제
-    const taxableAmount = Math.max(giftAmount - exemptionLimit - previousGiftTotal, 0);
+// 관계별 공제 한도 정의
+const exemptionLimits = {
+    child: 50000000,        // 성년 자녀
+    minorChild: 20000000,   // 미성년 자녀
+    spouse: 600000000,      // 배우자
+    inLaw: 50000000,        // 사위/며느리
+    other: 10000000         // 기타 타인
+};
 
-    // 증여세 계산
-    const giftTax = calculateGiftTax(taxableAmount);
+// 관계 선택에 따른 공제 한도 결정
+const relationship = document.getElementById('relationship').value;
+console.log('선택된 관계:', relationship); // 관계 값 확인
 
-    // 가산세
+const exemptionLimit = exemptionLimits[relationship] || 0;
+console.log('적용된 공제 한도:', exemptionLimit); // 공제 한도 확인
 
+// 과세 표준 계산
+const taxableAmount = Math.max(giftAmount - exemptionLimit - previousGiftTotal, 0);
+console.log('과세 표준:', taxableAmount); // 과세 표준 확인
 
+// 증여세 계산
+const giftTax = calculateGiftTax(taxableAmount);
+console.log('계산된 증여세:', giftTax); // 계산된 증여세 확인
+
+   
     // 가산세 계산
     const giftDate = document.getElementById('giftDate')?.value;
     const submissionDate = document.getElementById('submissionDate')?.value;
