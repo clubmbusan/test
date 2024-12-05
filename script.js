@@ -173,7 +173,7 @@ document.getElementById('taxForm').onsubmit = function (e) {
     } else {
         giftAmount = 0; // 재산 유형이 선택되지 않은 경우
     }
-
+   
     // 관계별 공제 한도 계산
     const exemptionLimit = getExemptionAmount(relationship);
 
@@ -202,6 +202,28 @@ document.getElementById('taxForm').onsubmit = function (e) {
         <p><strong>최종 납부세액:</strong> ${(giftTax + latePenalty).toLocaleString()}원</p>
     `;
 };
+// 주식 총 금액 자동 계산
+document.getElementById('stockInputField').addEventListener('input', function () {
+    const stockQuantityInput = document.getElementById('stockQuantity');
+    const stockPriceInput = document.getElementById('stockPrice');
+    const stockTotalInput = document.getElementById('stockTotal');
+
+    // 매수량
+    const stockQuantity = parseInt(stockQuantityInput.value.replace(/,/g, '') || '0', 10);
+
+    // 주당 가격 (콤마 처리 및 숫자로 변환)
+    const stockPrice = parseCurrency(stockPriceInput.value || '0');
+
+    // 총 금액 계산
+    const total = stockQuantity * stockPrice;
+
+    // 콤마 추가 및 표시
+    stockPriceInput.value = stockPrice.toLocaleString();
+    stockTotalInput.value = total.toLocaleString() + ' 원';
+
+    // 계산된 총 금액을 stockTotal 필드에 표시
+    stockTotalInput.value = total.toLocaleString() + ' 원';
+});
 
 // parseCurrency 함수 정의
 function parseCurrency(value) {
