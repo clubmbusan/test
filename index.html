@@ -19,27 +19,32 @@
             </select>
             
             <!-- 재산 유형별 입력 필드 -->
-            <div id="additionalFields">
-                <!-- 현금 입력 -->
-                <div id="cashInputField" style="display: block;">
-                    <label for="cashAmount">현금 금액 (원):</label>
-                    <input type="text" id="cashAmount" placeholder="예: 10,000,000">
-                </div>
-                
-                <!-- 부동산 입력 -->
-                <div id="realEstateInputField" style="display: none;">
-                    <label for="realEstateValue">부동산 평가액 (원):</label>
-                    <input type="text" id="realEstateValue" placeholder="예: 100,000,000">
-                </div>
-                
-                <!-- 주식 입력 -->
-                <div id="stockInputField" style="display: none;">
-                    <label for="stockQuantity">주식 매수량:</label>
-                    <input type="number" id="stockQuantity" placeholder="예: 100">
-                    <label for="stockPrice">주식 1주당 가격 (원):</label>
-                    <input type="text" id="stockPrice" placeholder="예: 10,000">
-                </div>
-            </div>
+          <div id="additionalFields">
+    <!-- 현금 입력 -->
+    <div id="cashInputField" style="display: block;">
+        <label for="cashAmount">현금 금액 (원):</label>
+        <input type="text" id="cashAmount" placeholder="예: 10,000,000">
+    </div>
+
+    <!-- 부동산 입력 -->
+    <div id="realEstateInputField" style="display: none;">
+        <label for="realEstateValue">부동산 평가액 (원):</label>
+        <input type="text" id="realEstateValue" placeholder="예: 100,000,000">
+    </div>
+
+    <!-- 주식 입력 -->
+    <div id="stockInputField" style="display: none;">
+        <label for="stockQuantity">주식 매수량:</label>
+        <input type="number" id="stockQuantity" placeholder="예: 100">
+
+        <label for="stockPrice">주식 1주당 가격 (원):</label>
+        <input type="text" id="stockPrice" placeholder="예: 10,000">
+
+        <!-- 추가된 총 금액 필드 -->
+        <label for="stockTotal">총 금액 (원):</label>
+        <input type="text" id="stockTotal" readonly placeholder="자동 계산됨">
+    </div>
+</div>
 
             <!-- 관계 -->
             <label for="relationship">관계:</label>
