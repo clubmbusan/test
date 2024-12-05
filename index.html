@@ -11,18 +11,34 @@
         <h1>증여세 계산기 (2024년 기준)</h1>
         <form id="taxForm">
             <!-- 재산 유형 -->
-
-
-
             <label for="assetType">재산 유형:</label>
             <select id="assetType">
                 <option value="cash" selected>현금</option>
                 <option value="realEstate">부동산</option>
                 <option value="stock">주식</option>
             </select>
+            
+            <!-- 재산 유형별 입력 필드 -->
             <div id="additionalFields">
-                <label for="cashAmount">현금 금액 (원):</label>
-                <input type="text" id="cashAmount" placeholder="예: 10,000,000">
+                <!-- 현금 입력 -->
+                <div id="cashInputField" style="display: block;">
+                    <label for="cashAmount">현금 금액 (원):</label>
+                    <input type="text" id="cashAmount" placeholder="예: 10,000,000">
+                </div>
+                
+                <!-- 부동산 입력 -->
+                <div id="realEstateInputField" style="display: none;">
+                    <label for="realEstateValue">부동산 평가액 (원):</label>
+                    <input type="text" id="realEstateValue" placeholder="예: 100,000,000">
+                </div>
+                
+                <!-- 주식 입력 -->
+                <div id="stockInputField" style="display: none;">
+                    <label for="stockQuantity">주식 매수량:</label>
+                    <input type="number" id="stockQuantity" placeholder="예: 100">
+                    <label for="stockPrice">주식 1주당 가격 (원):</label>
+                    <input type="text" id="stockPrice" placeholder="예: 10,000">
+                </div>
             </div>
 
             <!-- 관계 -->
