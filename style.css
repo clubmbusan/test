@@ -41,7 +41,7 @@ button#addGiftButton, button#button-calculate {
     width: 100%; /* 다른 입력창과 동일한 너비 */
     padding: 10px; /* 입력 필드와 동일한 여백 */
     margin-bottom: 15px; /* 아래 여백 추가 */
-    background-color: #28a745;
+    background-color: #28a745; /* 녹색 버튼 */
     color: #fff;
     border: none;
     border-radius: 5px; /* 모서리 둥글게 */
@@ -52,6 +52,64 @@ button#addGiftButton, button#button-calculate {
 
 button#addGiftButton:hover, button#button-calculate:hover {
     background-color: #218838; /* 호버 시 색상 변경 */
+}
+
+/* 계산 버튼 기본 스타일 */
+button#calculateButton {
+    background-color: green; /* 초기 녹색 배경 */
+    color: white; /* 텍스트 흰색 */
+    border: none; /* 테두리 제거 */
+    padding: 10px 20px; /* 여백 설정 */
+    border-radius: 5px; /* 모서리를 둥글게 */
+    font-size: 16px; /* 글씨 크기 */
+    cursor: pointer; /* 클릭 가능한 손 모양 커서 */
+    box-sizing: border-box; /* 크기 계산 통일 */
+}
+
+/* 계산 버튼 호버 시 스타일 */
+button#calculateButton:hover {
+    background-color: #006400; /* 더 진한 녹색 */
+}
+/* 과거 증여 금액 필드 스타일 */
+.gift-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.amount-input {
+    flex: 2;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.date-input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.remove-gift-button {
+    flex: 0.5;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 40px;
+    text-align: center;
+    line-height: 30px;
+}
+
+/* 삭제 버튼 호버 시 스타일 */
+.remove-gift-button:hover {
+    background-color: #d32f2f;
 }
 
 /* 상단 제목 크기 조정 */
