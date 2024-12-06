@@ -85,33 +85,29 @@ function calculateAdjustedExemption(relationship, previousGifts) {
 // 누진세 계산
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 10000000, rate: 10, deduction: 0 },          // 1천만 원 이하 10%
-        { limit: 100000000, rate: 20, deduction: 10000000 },  // 1억 원 이하 20%
-        { limit: 500000000, rate: 30, deduction: 60000000 },  // 5억 원 이하 30%
-        { limit: 1000000000, rate: 40, deduction: 160000000 },// 10억 원 이하 40%
-        { limit: 3000000000, rate: 50, deduction: 460000000 },// 30억 원 이하 50%
-        { limit: Infinity, rate: 60, deduction: 960000000 }   // 30억 원 초과 60%
+        { limit: 100000000, rate: 10, deduction: 0 },           // 1억 원 이하 10%
+        { limit: 500000000, rate: 20, deduction: 10000000 },    // 5억 원 이하 20%
+        { limit: 3000000000, rate: 30, deduction: 70000000 },   // 30억 원 이하 30%
+        { limit: Infinity, rate: 50, deduction: 470000000 }     // 30억 초과 50%
     ];
 
     let tax = 0;
     let previousLimit = 0;
 
-    // 각 구간에 대해 세금 계산
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
-            // 현재 구간을 초과하면, 해당 구간의 한도까지 계산
+            // 구간을 초과하면, 해당 구간까지만 계산
             tax += (bracket.limit - previousLimit) * (bracket.rate / 100);
             previousLimit = bracket.limit;
         } else {
-            // 마지막 구간은 공제액을 차감한 세액 계산
+            // 마지막 구간에 대해 계산 (공제액 차감)
             tax += (taxableAmount - previousLimit) * (bracket.rate / 100);
             tax -= bracket.deduction;  // 공제액 차감
             break;
         }
     }
 
-    // 계산된 세금이 음수일 수 있으므로 0을 반환
-    return Math.max(tax, 0);
+    return Math.max(tax, 0); // 음수 방지
 }
 
 // 최종 세금 계산 및 출력 함수
