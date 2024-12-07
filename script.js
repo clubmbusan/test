@@ -99,12 +99,7 @@ function calculateGiftTax(taxableAmount) {
     return Math.max(tax, 0);
 }
 
-// 농어촌특별세 계산
-function calculateSpecialTax(giftTax) {
-    return Math.floor(giftTax * 0.1); // 농어촌특별세는 증여세의 10%
-}
-
-// 가산세 계산 로직
+// 가산세 계산 로직 (신고불성실 및 지연가산세 포함)
 function calculateLatePenalty(submissionDate, giftDate, giftTax) {
     const giftDateObj = new Date(giftDate);
     const submissionDateObj = new Date(submissionDate);
@@ -114,20 +109,38 @@ function calculateLatePenalty(submissionDate, giftDate, giftTax) {
     }
 
     const dueDate = new Date(giftDateObj);
-    dueDate.setMonth(dueDate.getMonth() + 3);
-
-    if (submissionDateObj <= dueDate) {
-        return { penalty: 0, message: "신고 기한 내 신고 완료" };
-    }
+    dueDate.setMonth(dueDate.getMonth() + 3); // 기본 신고 기한: 증여일로부터 3개월
 
     const extendedDueDate = new Date(giftDateObj);
-    extendedDueDate.setMonth(extendedDueDate.getMonth() + 6);
+    extendedDueDate.setMonth(giftDateObj.getMonth() + 6); // 연장 신고 기한: 증여일로부터 6개월
 
-    if (submissionDateObj <= extendedDueDate) {
-        return { penalty: giftTax * 0.1, message: "신고 기한 초과 (3~6개월)" };
+    let penalty = 0;
+    let message = "";
+
+    if (submissionDateObj > dueDate) {
+        const overdueDays = Math.ceil((submissionDateObj - dueDate) / (1000 * 60 * 60 * 24));
+
+        // 신고불성실 가산세
+        if (submissionDateObj <= extendedDueDate) {
+            // 3개월 초과 ~ 6개월 이하: 10%
+            penalty += giftTax * 0.1;
+            message = `신고불성실 가산세: 10% (3~6개월 초과, ${overdueDays}일 초과)`;
+        } else {
+            // 6개월 초과: 20%
+            penalty += giftTax * 0.2;
+            message = `신고불성실 가산세: 20% (6개월 초과, ${overdueDays}일 초과)`;
+        }
+
+        // 지연가산세: 하루당 0.025%, 최대 36개월 (1%)
+        const delayPenalty = Math.min(giftTax * 0.0025 * overdueDays, giftTax * 0.1);
+        penalty += delayPenalty;
+
+        message += ` + 지연가산세: ${delayPenalty.toLocaleString()}원`;
+    } else {
+        message = "신고 기한 내 신고 완료";
     }
 
-    return { penalty: giftTax * 0.2, message: "신고 기한 초과 (6개월 초과)" };
+    return { penalty: Math.floor(penalty), message };
 }
 
 // 최종 세금 계산 및 출력
@@ -136,23 +149,26 @@ function calculateFinalTax() {
     const previousGifts = getPreviousGifts();
     const relationship = document.getElementById('relationship').value;
 
+    // 공제 및 과세 금액 계산
     const { adjustedExemption, taxableAmount } = calculateTaxableAmountAndExemption(relationship, giftAmount, previousGifts);
-    const giftTax = calculateGiftTax(taxableAmount);
-    const specialTax = calculateSpecialTax(giftTax);
 
+    // 증여세 계산
+    const giftTax = calculateGiftTax(taxableAmount);
+
+    // 가산세 계산
     const giftDate = document.getElementById('giftDate').value;
     const submissionDate = document.getElementById('submissionDate').value;
     const { penalty, message } = calculateLatePenalty(submissionDate, giftDate, giftTax);
 
-    const totalTax = giftTax + specialTax + penalty;
+    const totalTax = giftTax + penalty;
 
+    // 결과 출력
     document.getElementById('result').innerHTML = `
         <h3>계산 결과</h3>
         <p>증여 금액: ${giftAmount.toLocaleString()} 원</p>
         <p>공제 금액: ${adjustedExemption.toLocaleString()} 원</p>
         <p>과세 금액: ${taxableAmount.toLocaleString()} 원</p>
         <p>증여세: ${giftTax.toLocaleString()} 원</p>
-        <p>농어촌특별세: ${specialTax.toLocaleString()} 원</p>
         <p>가산세: ${penalty.toLocaleString()} 원 (${message})</p>
         <p><strong>최종 납부세액: ${totalTax.toLocaleString()} 원</strong></p>
     `;
