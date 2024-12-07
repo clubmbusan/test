@@ -85,7 +85,7 @@ button#donationTaxButton:hover {
     background-color: #45a049;
 }
 
-/* 과거 증여 금액 입력 필드 */
+/* 과거 증여 금액 필드 스타일 */
 .gift-entry {
     display: flex;
     align-items: center;
@@ -93,21 +93,41 @@ button#donationTaxButton:hover {
     margin-bottom: 10px;
 }
 
-.amount-input,
-.date-input {
-    padding: 5px;
+.amount-input {
+    flex: 3; /* 금액 입력 칸 넓이 확장 */
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    height: 40px;
+    height: 40px; /* 동일 높이 */
     box-sizing: border-box;
 }
 
-.amount-input {
-    flex: 2;
+.date-input {
+    flex: 2; /* 날짜 입력 칸 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 40px; /* 동일 높이 */
+    box-sizing: border-box;
 }
 
-.date-input {
-    flex: 1;
+.remove-gift-button {
+    flex: 1; /* 삭제 버튼의 넓이 줄임 */
+    background-color: #f44336; /* 빨간색 배경 */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    height: 40px; /* 동일 높이 */
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* 삭제 버튼 호버 시 스타일 */
+.remove-gift-button:hover {
+    background-color: #d32f2f;
 }
 
 /* 상단 제목 스타일 */
