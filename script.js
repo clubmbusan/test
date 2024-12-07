@@ -84,11 +84,12 @@ function calculateAdjustedExemption(relationship, previousGifts) {
 
 // 누진세 계산
 function calculateGiftTax(taxableAmount) {
-    const taxBrackets = [
-        { limit: 100000000, rate: 10, deduction: 0 },           // 1억 원 이하 10%
-        { limit: 500000000, rate: 20, deduction: 10000000 },    // 5억 원 이하 20%
-        { limit: 3000000000, rate: 30, deduction: 70000000 },   // 30억 원 이하 30%
-        { limit: Infinity, rate: 50, deduction: 470000000 }     // 30억 초과 50%
+   const taxBrackets = [
+        { limit: 100000000, rate: 0.1, deduction: 0 },          // 1억 이하 10%
+        { limit: 500000000, rate: 0.2, deduction: 10000000 },  // 1억 초과 ~ 5억 이하 20%, 공제: 1천만 원
+        { limit: 1000000000, rate: 0.3, deduction: 60000000 }, // 5억 초과 ~ 10억 이하 30%, 공제: 6천만 원
+        { limit: 3000000000, rate: 0.4, deduction: 160000000 },// 10억 초과 ~ 30억 이하 40%, 공제: 1억6천만 원
+        { limit: Infinity, rate: 0.5, deduction: 460000000 }   // 30억 초과 50%, 공제: 4억6천만 원
     ];
 
     let tax = 0;
