@@ -60,31 +60,49 @@
 <div id="previousGifts"></div>
 <button type="button" id="addGiftButton">과거 증여 금액 추가</button>
 
+<!-- 추가: 증여세 신고 버튼 -->
+<button type="button" id="donationTaxButton">증여세 신고</button>
+<!-- 추가: 증여세 신고 결과를 표시할 섹션 -->
+<div id="donationTaxResult" style="margin-top: 20px; display: none;">
+    <!-- 결과가 여기에 표시됩니다 -->
+</div>
+
 <!-- 증여일 -->
-<label for="giftDate">증여일:</label>
-<input type="date" id="giftDate" placeholder="연도-월-일">
-<p>증여일은 증여 계약서 서명일 또는 재산 이전일입니다.</p>
+<div id="giftDateContainer" style="display: none;">
+    <label for="giftDate">증여일:</label>
+    <input type="date" id="giftDate" placeholder="연도-월-일">
+    <p>증여일은 증여 계약서 서명일 또는 재산 이전일입니다.</p>
+</div>
 
 <!-- 신고일 -->
-<label for="submissionDate">신고일:</label>
-<input type="date" id="submissionDate" placeholder="연도-월-일">
-<p>신고일은 증여세 신고 접수일을 기준으로 입력하세요.</p>
+<div id="submissionDateContainer" style="display: none;">
+    <label for="submissionDate">신고일:</label>
+    <input type="date" id="submissionDate" placeholder="연도-월-일">
+    <p>신고일은 증여세 신고 접수일을 기준으로 입력하세요.</p>
+</div>
 
-            <!-- 신고 기한 선택 -->
-            <label for="extendedPeriod">신고 기한:</label>
-            <select id="extendedPeriod">
-                <option value="false" selected>기본 (3개월)</option>
-                <option value="true">연장 (6개월)</option>
-            </select>
-            <p>신고 기한이 연장되는 경우(부동산, 주식 등), 연장을 선택하세요.</p>
+<!-- 신고 기한 -->
+<div id="extendedPeriodContainer" style="display: none;">
+    <label for="extendedPeriod">신고 기한:</label>
+    <select id="extendedPeriod">
+        <option value="false" selected>기본 (3개월)</option>
+        <option value="true">연장 (6개월)</option>
+    </select>
+    <p>신고 기한이 연장되는 경우(부동산, 주식 등), 연장을 선택하세요.</p>
+</div>
 
             <!-- 계산하기 버튼 -->
-           <button type="button" id="calculateButton">계산하기</button>
+          <button type="button" id="calculateButton">계산하기</button>
         </form>
 
         <!-- 결과 -->
         <div id="result"></div>
     </div>
+    <!-- 추가: 상속세 계산기와 취득세 계산기 버튼 섹션 -->
+<div id="extraTaxButtons" style="margin-top: 30px;">
+    <button type="button" id="inheritanceTaxButton" style="margin-right: 10px;">상속세 계산기</button>
+    <button type="button" id="acquisitionTaxButton">취득세 계산기</button>
+</div>
     <script src="script.js"></script>
 </body>
 </html>
