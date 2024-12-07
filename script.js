@@ -14,6 +14,60 @@ document.addEventListener('input', function (event) {
     }
 });
 
+// 2. 재산 유형 선택 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', function () {
+    const assetType = document.getElementById('assetType'); // 재산 유형 select 요소
+    if (!assetType) {
+        console.error('재산 유형 선택 요소가 없습니다.');
+        return;
+    }
+
+    assetType.addEventListener('change', function (e) {
+        const selectedType = e.target.value; // 선택된 재산 유형
+
+        // 재산 유형별 입력 필드
+        const cashField = document.getElementById('cashInputField');
+        const realEstateField = document.getElementById('realEstateInputField');
+        const stockField = document.getElementById('stockInputField');
+
+        // 모든 필드를 숨김 처리
+        cashField.style.display = 'none';
+        realEstateField.style.display = 'none';
+        stockField.style.display = 'none';
+
+        // 선택된 유형에 따라 필드 표시
+        if (selectedType === 'cash') {
+            cashField.style.display = 'block';
+        } else if (selectedType === 'realEstate') {
+            realEstateField.style.display = 'block';
+        } else if (selectedType === 'stock') {
+            stockField.style.display = 'block';
+        }
+    });
+});
+
+// 과거 증여 금액 추가 버튼 이벤트 (여기에 추가)
+document.getElementById('addGiftButton').addEventListener('click', function () {
+    const container = document.getElementById('previousGifts'); // 과거 증여 입력 컨테이너
+    const newGiftEntry = document.createElement('div');
+    newGiftEntry.className = 'gift-entry'; // 스타일 적용 가능
+    newGiftEntry.style.marginTop = '10px'; // 간격 추가
+
+    newGiftEntry.innerHTML = `
+        <input type="text" name="pastGiftAmount" placeholder="금액 입력 (원)" class="amount-input" style="width: 150px;">
+        <input type="date" name="pastGiftDate" class="date-input" style="margin-left: 10px;">
+        <button type="button" class="remove-gift-button" style="background-color: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; margin-left: 10px;">삭제</button>
+    `;
+
+    // 삭제 버튼 동작 추가
+    const removeButton = newGiftEntry.querySelector('.remove-gift-button');
+    removeButton.addEventListener('click', function () {
+        container.removeChild(newGiftEntry);
+    });
+
+    // 새 항목 추가
+    container.appendChild(newGiftEntry);
+});
 // 관계별 공제 한도 계산
 function getExemptionAmount(relationship) {
     const exemptions = {
@@ -176,3 +230,28 @@ function calculateFinalTax() {
 
 // 계산하기 버튼 이벤트
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
+
+// 증여세 신고 버튼 클릭 이벤트
+document.getElementById('donationTaxButton').addEventListener('click', function () {
+    const giftDateContainer = document.getElementById('giftDateContainer');
+    const submissionDateContainer = document.getElementById('submissionDateContainer');
+    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
+
+    // 숨겨진 입력 필드 토글 (보이기/숨기기)
+    const isVisible = giftDateContainer.style.display === 'block';
+    const newDisplay = isVisible ? 'none' : 'block';
+
+    giftDateContainer.style.display = newDisplay;
+    submissionDateContainer.style.display = newDisplay;
+    extendedPeriodContainer.style.display = newDisplay;
+});
+
+// 상속세 계산기 버튼 클릭 이벤트
+document.getElementById('inheritanceTaxButton').addEventListener('click', function () {
+    alert('상속세 계산기 기능은 현재 작업 중입니다.');
+});
+
+// 취득세 계산기 버튼 클릭 이벤트
+document.getElementById('acquisitionTaxButton').addEventListener('click', function () {
+    alert('취득세 계산기 기능은 현재 작업 중입니다.');
+});
