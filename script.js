@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// 과거 증여 금액 추가 버튼 이벤트 (여기에 추가)
+// 과거 증여 금액 버튼 이벤트 (여기에 추가)
 document.getElementById('addGiftButton').addEventListener('click', function () {
     const container = document.getElementById('previousGifts'); // 과거 증여 입력 컨테이너
     const newGiftEntry = document.createElement('div');
@@ -254,4 +254,9 @@ document.getElementById('inheritanceTaxButton').addEventListener('click', functi
 // 취득세 계산기 버튼 클릭 이벤트
 document.getElementById('acquisitionTaxButton').addEventListener('click', function () {
     alert('취득세 계산기 기능은 현재 작업 중입니다.');
+});
+
+// 양도소득세 계산기 버튼 클릭 이벤트
+document.getElementById('capitalgainsTaxButton').addEventListener('click', function () {
+    alert('양도소득세 계산기 기능은 현재 작업 중입니다.');
 });
