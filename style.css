@@ -116,13 +116,14 @@ button:hover {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%; /* 모바일 친화적으로 90% 너비 */
-    max-width: 400px; /* 최대 너비 */
+    max-width: 600px; /* 최대 너비 (계산기와 동일) */
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
     z-index: 1000; /* 오버레이보다 위에 표시 */
     text-align: center;
+    box-sizing: border-box;
 }
 
 /* 모달 제목 스타일 */
@@ -130,6 +131,7 @@ button:hover {
     margin: 0 0 15px;
     font-size: 18px;
     font-weight: bold;
+    color: #333;
 }
 
 /* 모달 닫기 버튼 스타일 */
@@ -139,7 +141,7 @@ button:hover {
     right: 10px;
     background: none;
     border: none;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
     color: #666;
 }
@@ -156,14 +158,23 @@ button:hover {
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    font-size: 16px;
     box-sizing: border-box;
 }
 
-/* 모달 내부 버튼 스타일 */
+/* 모달 버튼 컨테이너 */
+.modalButtons {
+    display: flex;
+    justify-content: center; /* 버튼 중앙 정렬 */
+    gap: 10px; /* 버튼 간 간격 */
+}
+
+/* 저장 버튼 스타일 */
 #saveMarriageGiftButton {
     width: 100%;
+    max-width: 150px; /* 버튼 최대 너비 */
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #007BFF; /* 파란색 */
     color: white;
     border: none;
     border-radius: 5px;
@@ -172,7 +183,24 @@ button:hover {
 }
 
 #saveMarriageGiftButton:hover {
-    background-color: #45a049;
+    background-color: #0056b3; /* 호버 시 진한 파란색 */
+}
+
+/* 닫기 버튼 스타일 */
+#closeMarriageGiftModal {
+    width: 100%;
+    max-width: 150px; /* 버튼 최대 너비 */
+    padding: 10px;
+    background-color: #f44336; /* 빨간색 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#closeMarriageGiftModal:hover {
+    background-color: #d32f2f; /* 호버 시 진한 빨간색 */
 }
 
 /* 하단 버튼 컨테이너 */
