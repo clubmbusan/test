@@ -6,7 +6,18 @@ function parseCurrency(value) {
 // 숫자 입력 필드에 콤마 추가
 document.addEventListener('input', function (event) {
     const target = event.target;
-    if (['cashAmount', 'realEstateValue', 'stockPrice'].includes(target.id) || target.classList.contains('amount-input')) {
+
+    // 콤마 적용 대상 필드 ID
+    const applicableFields = [
+        'cashAmount',          // 현금 입력 필드
+        'realEstateValue',     // 부동산 입력 필드
+        'stockPrice',          // 주식 가격 입력 필드
+        'selfParentAmountInput', // 모달: 자가 부모 금액 입력
+        'inLawParentAmountInput' // 모달: 처가 부모 금액 입력
+    ];
+
+    // 콤마 적용 여부 확인
+    if (applicableFields.includes(target.id)) {
         const rawValue = target.value.replace(/[^0-9]/g, ''); // 숫자 외 문자 제거
         if (rawValue === '') {
             target.value = ''; // 빈 값 처리
