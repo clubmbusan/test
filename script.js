@@ -144,30 +144,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const inLawParentAmountInput = document.getElementById('inLawParentAmountInput');
     const remainingAmount = document.getElementById('remainingAmount');
 
-    let totalGiftAmount = 0;
-    let marriageGiftSelf = 0;
-    let marriageGiftInLaw = 0;
+    let totalGiftAmount = 0; // 총 증여 금액
+    let marriageGiftSelf = 0; // 자가 부모 증여 금액
+    let marriageGiftInLaw = 0; // 처가 부모 증여 금액
 
-    marriageGiftButton.addEventListener('click', function () {
-        totalGiftAmount = parseCurrency(document.getElementById('cashAmount').value || '0');
-        if (totalGiftAmount === 0) {
-            alert('금액을 먼저 입력하세요.');
-            return;
-        }
+    // 모달 열기 버튼 이벤트
+     marriageGiftButton.addEventListener('click', function () {
+     totalGiftAmount = parseCurrency(cashAmount.value);
 
-        remainingAmount.textContent = `${totalGiftAmount.toLocaleString()} 원`;
-        marriageGiftModal.style.display = 'block';
-    });
-
-    function updateRemainingAmount() {
-        const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
-        const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
-        const remaining = Math.max(0, totalGiftAmount - (selfAmount + inLawAmount));
-        remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
+     if (totalGiftAmount === 0) {
+        alert('금액을 먼저 입력하세요.');
+        return;
     }
 
-    selfParentAmountInput.addEventListener('input', updateRemainingAmount);
-    inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
+    remainingAmount.textContent = `${totalGiftAmount.toLocaleString()} 원`;
+    marriageGiftModal.style.display = 'block';
+});
+
+// 부모별 금액 입력 시 남은 금액 자동 계산
+function updateRemainingAmount() {
+    const selfAmount = parseCurrency(selfParentAmountInput.value);
+    const inLawAmount = parseCurrency(inLawParentAmountInput.value);
+
+    const remaining = Math.max(0, totalGiftAmount - (selfAmount + inLawAmount));
+    remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
+}
+
+selfParentAmountInput.addEventListener('input', updateRemainingAmount);
+inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
 
     saveMarriageGiftButton.addEventListener('click', function () {
         const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
