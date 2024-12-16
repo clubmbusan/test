@@ -60,8 +60,12 @@
     <option value="other">타인(친구, 친인척 등) - 공제 한도: 10,000,000원</option>
 </select>
 
-           <!-- 결혼 증여 모달 -->
-<div id="marriageGiftModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+           <!-- 모달 배경 오버레이 -->
+<div id="marriageGiftModalOverlay"></div>
+
+<!-- 결혼 증여 모달 -->
+<div id="marriageGiftModal">
+    <button id="closeMarriageGiftModal">&times;</button> <!-- 닫기 버튼 -->
     <h3>결혼 증여 공제 입력</h3>
     <label>증여자 선택:</label>
     <select id="marriageDonor">
@@ -72,10 +76,7 @@
     </select>
     <label>증여 금액:</label>
     <input type="text" id="marriageGiftAmount" class="amount-input" placeholder="금액 입력 (원)">
-    <div style="margin-top: 10px; text-align: right;">
-        <button id="saveMarriageGiftButton" type="button">저장</button>
-        <button id="closeMarriageGiftModal" type="button">닫기</button>
-    </div>
+    <button id="saveMarriageGiftButton" type="button">저장</button>
 </div>
  
 <!-- 추가: 증여세 신고 버튼 -->
