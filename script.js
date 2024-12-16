@@ -228,6 +228,41 @@ function calculateFinalTax() {
     `;
 }
 
+// *** 결혼 증여 입력 모달 기능 추가 (증여세 신고 버튼 바로 위에) ***
+document.addEventListener('DOMContentLoaded', function () {
+    const marriageGiftButton = document.getElementById('marriageGiftButton'); // 결혼 증여 버튼
+    const marriageGiftModal = document.getElementById('marriageGiftModal'); // 모달 창
+    const closeMarriageGiftModal = document.getElementById('closeMarriageGiftModal'); // 닫기 버튼
+    const saveMarriageGiftButton = document.getElementById('saveMarriageGiftButton'); // 저장 버튼
+
+    // 결혼 증여 버튼 클릭 시 모달 열기
+    marriageGiftButton.addEventListener('click', function () {
+        marriageGiftModal.style.display = 'flex';
+    });
+
+    // 닫기 버튼 클릭 시 모달 닫기
+    closeMarriageGiftModal.addEventListener('click', function () {
+        marriageGiftModal.style.display = 'none';
+    });
+
+    // 저장 버튼 클릭 시 데이터 처리 및 모달 닫기
+    saveMarriageGiftButton.addEventListener('click', function () {
+        const donor = document.getElementById('marriageDonor').value;
+        const amount = document.getElementById('marriageGiftAmount').value;
+
+        if (!amount || isNaN(parseInt(amount))) {
+            alert('올바른 금액을 입력해주세요.');
+            return;
+        }
+
+        alert(`결혼 증여 저장됨\n증여자: ${donor}\n금액: ${parseInt(amount).toLocaleString()} 원`);
+
+        // 입력 필드 초기화
+        document.getElementById('marriageGiftAmount').value = '';
+        marriageGiftModal.style.display = 'none';
+    });
+});
+
 // 계산하기 버튼 이벤트
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
 
@@ -246,17 +281,3 @@ document.getElementById('donationTaxButton').addEventListener('click', function 
     extendedPeriodContainer.style.display = newDisplay;
 });
 
-// 상속세 계산기 버튼 클릭 이벤트
-document.getElementById('inheritanceTaxButton').addEventListener('click', function () {
-    alert('상속세 계산기 기능은 현재 작업 중입니다.');
-});
-
-// 취득세 계산기 버튼 클릭 이벤트
-document.getElementById('acquisitionTaxButton').addEventListener('click', function () {
-    alert('취득세 계산기 기능은 현재 작업 중입니다.');
-});
-
-// 양도소득세 계산기 버튼 클릭 이벤트
-document.getElementById('capitalgainsTaxButton').addEventListener('click', function () {
-    alert('양도소득세 계산기 기능은 현재 작업 중입니다.');
-});
