@@ -183,17 +183,19 @@ document.addEventListener('DOMContentLoaded', function () {
     let marriageGiftSelf = 0; // 자가 부모 증여 금액
     let marriageGiftInLaw = 0; // 처가 부모 증여 금액
 
-    // 모달 열기 버튼 이벤트
-     marriageGiftButton.addEventListener('click', function () {
-     totalGiftAmount = parseCurrency(cashAmount.value);
+    // 모달 열기 버튼
+marriageGiftButton.addEventListener('click', function () {
+    const cashInput = document.getElementById('cashAmount'); // 현금 금액 입력 필드
+    totalGiftAmount = parseCurrency(cashInput.value || '0'); // 현금 금액 파싱하여 숫자로 변환
 
-     if (totalGiftAmount === 0) {
-        alert('금액을 먼저 입력하세요.');
+    if (totalGiftAmount === 0) {
+        alert('증여 금액을 먼저 입력하세요.');
         return;
     }
 
+    // 남은 금액 초기화
     remainingAmount.textContent = `${totalGiftAmount.toLocaleString()} 원`;
-    marriageGiftModal.style.display = 'block';
+    marriageGiftModal.style.display = 'block'; // 모달 표시
 });
 
 // 부모별 금액 입력 시 남은 금액 자동 계산
