@@ -63,24 +63,29 @@
            <!-- 모달 배경 오버레이 -->
 <div id="marriageGiftModalOverlay"></div>
 
-            <!-- 결혼 증여 공제 버튼 -->
+        <!-- 결혼 증여 입력 버튼 -->
 <button id="marriageGiftButton" type="button">결혼 증여 입력</button>
 
-<!-- 결혼 증여 공제 입력 필드 (초기에는 숨김) -->
-<div id="marriageGiftFields" style="display: none;">
-    <h3>결혼 증여 공제 입력</h3>
-    <label for="marriageDonor">증여자 선택:</label>
-    <select id="marriageDonor">
-        <option value="father">아버지</option>
-        <option value="mother">어머니</option>
-        <option value="fatherInLaw">장인</option>
-        <option value="motherInLaw">장모</option>
-    </select>
+<!-- 결혼 증여 입력 모달 (초기에는 숨김) -->
+<div id="marriageGiftModal" style="display: none;">
+    <div id="modalContent">
+        <h3>결혼 증여 공제 입력</h3>
+        <label for="marriageDonor">증여자 선택:</label>
+        <select id="marriageDonor">
+            <option value="father">아버지</option>
+            <option value="mother">어머니</option>
+            <option value="fatherInLaw">장인</option>
+            <option value="motherInLaw">장모</option>
+        </select>
 
-    <label for="marriageGiftAmount">증여 금액:</label>
-    <input type="text" id="marriageGiftAmount" placeholder="금액 입력 (원)">
+        <label for="marriageGiftAmount">증여 금액:</label>
+        <input type="text" id="marriageGiftAmount" placeholder="금액 입력 (원)">
 
-    <button id="saveMarriageGiftButton" type="button">저장</button>
+        <div class="modalButtons">
+            <button id="saveMarriageGiftButton" type="button">저장</button>
+            <button id="closeMarriageGiftModal" type="button">닫기</button>
+        </div>
+    </div>
 </div>
 
             <!-- 추가: 증여세 신고 버튼 -->
