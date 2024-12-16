@@ -294,6 +294,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function calculateExemptions() {
+    // 결혼 증여 공제 (최대 4억)
+    const marriageExemption = Math.min(marriageGiftSelf + marriageGiftInLaw, 400000000);
+
+    // 관계 공제 (결혼증여가 없을 경우만 적용)
+    const relationship = document.getElementById('relationship').value;
+    const relationshipExemption = marriageGiftSelf + marriageGiftInLaw > 0 ? 0 : getExemptionAmount(relationship);
+
+    // 총 공제 금액
+    return marriageExemption + relationshipExemption;
+}
+
+
 // 계산하기 버튼 이벤트
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
 
