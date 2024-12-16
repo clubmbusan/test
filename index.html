@@ -66,21 +66,25 @@
             <!-- 결혼 증여 입력 버튼 -->
 <button id="marriageGiftButton" type="button">결혼 증여 입력</button>
             
-       <!-- 결혼 증여 입력 모달 -->
-<div id="marriageGiftModalOverlay"></div>
+      <!-- 결혼 증여 입력 모달 -->
+<div id="marriageGiftModalOverlay" style="display: none;"></div>
 <div id="marriageGiftModal" style="display: none;">
     <div id="modalContent">
         <h3>결혼 증여 공제 입력</h3>
-        <label for="marriageDonor">증여 총액:</label>
-        <p id="marriageTotalGiftAmount"></p> <!-- 입력된 총 금액 표시 -->
 
-        <h4>자동 분배 결과:</h4>
-        <ul>
-            <li>자가 부모: <span id="selfParentAmount">0 원</span></li>
-            <li>처가 부모: <span id="inLawParentAmount">0 원</span></li>
-            <li>남은 금액: <span id="remainingAmount">0 원</span></li>
-        </ul>
+        <!-- 자가 부모 입력 -->
+        <label for="selfParentAmountInput">자가 부모 (아버지 + 어머니):</label>
+        <input type="text" id="selfParentAmountInput" class="modal-input" placeholder="예: 2,000,000">
 
+        <!-- 처가 부모 입력 -->
+        <label for="inLawParentAmountInput">처가 부모 (장인 + 장모):</label>
+        <input type="text" id="inLawParentAmountInput" class="modal-input" placeholder="예: 2,000,000">
+
+        <!-- 남은 금액 자동 표시 -->
+        <h4>남은 금액:</h4>
+        <p id="remainingAmount">0 원</p>
+
+        <!-- 모달 버튼 -->
         <div class="modalButtons">
             <button id="saveMarriageGiftButton" type="button" class="modal-button">저장</button>
             <button id="closeMarriageGiftModal" type="button" class="modal-button">닫기</button>
