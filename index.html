@@ -45,6 +45,10 @@
         <input type="text" id="stockTotal" readonly placeholder="자동 계산됨">
     </div>
 </div>
+            <!-- 과거 증여 금액 -->
+<h3>과거 증여 금액 입력</h3>
+<div id="previousGifts"></div>
+<button type="button" id="addGiftButton">과거 증여금</button>
 
             <!-- 관계 선택 -->
 <label for="relationship">관계:</label>
@@ -56,10 +60,24 @@
     <option value="other">타인(친구, 친인척 등) - 공제 한도: 10,000,000원</option>
 </select>
 
-<!-- 과거 증여 금액 -->
-<div id="previousGifts"></div>
-<button type="button" id="addGiftButton">과거 증여금</button>
-
+           <!-- 결혼 증여 모달 -->
+<div id="marriageGiftModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <h3>결혼 증여 공제 입력</h3>
+    <label>증여자 선택:</label>
+    <select id="marriageDonor">
+        <option value="father">아버지</option>
+        <option value="mother">어머니</option>
+        <option value="fatherInLaw">장인</option>
+        <option value="motherInLaw">장모</option>
+    </select>
+    <label>증여 금액:</label>
+    <input type="text" id="marriageGiftAmount" class="amount-input" placeholder="금액 입력 (원)">
+    <div style="margin-top: 10px; text-align: right;">
+        <button id="saveMarriageGiftButton" type="button">저장</button>
+        <button id="closeMarriageGiftModal" type="button">닫기</button>
+    </div>
+</div>
+ 
 <!-- 추가: 증여세 신고 버튼 -->
 <button type="button" id="donationTaxButton">증여세 신고</button>
 <!-- 추가: 증여세 신고 결과를 표시할 섹션 -->
