@@ -228,37 +228,62 @@ function calculateFinalTax() {
     `;
 }
 
-// *** 결혼 증여 입력 모달 기능 추가 (증여세 신고 버튼 바로 위에) ***
+// *** 결혼 증여 모달 로직 ***
 document.addEventListener('DOMContentLoaded', function () {
-    const marriageGiftButton = document.getElementById('marriageGiftButton'); // 결혼 증여 버튼
-    const marriageGiftModal = document.getElementById('marriageGiftModal'); // 모달 창
-    const closeMarriageGiftModal = document.getElementById('closeMarriageGiftModal'); // 닫기 버튼
-    const saveMarriageGiftButton = document.getElementById('saveMarriageGiftButton'); // 저장 버튼
+    const marriageGiftButton = document.getElementById('marriageGiftButton');
+    const marriageGiftModal = document.getElementById('marriageGiftModal');
+    const closeMarriageGiftModal = document.getElementById('closeMarriageGiftModal');
+    const saveMarriageGiftButton = document.getElementById('saveMarriageGiftButton');
 
-    // 결혼 증여 버튼 클릭 시 모달 열기
+    const selfParentAmountInput = document.getElementById('selfParentAmountInput');
+    const inLawParentAmountInput = document.getElementById('inLawParentAmountInput');
+    const remainingAmount = document.getElementById('remainingAmount');
+
+    const cashAmount = document.getElementById('cashAmount');
+
+    let totalGiftAmount = 0;
+
+    // 모달 열기 버튼
     marriageGiftButton.addEventListener('click', function () {
-        marriageGiftModal.style.display = 'flex';
-    });
+        totalGiftAmount = parseInt(cashAmount.value.replace(/[^0-9]/g, ''), 10) || 0;
 
-    // 닫기 버튼 클릭 시 모달 닫기
-    closeMarriageGiftModal.addEventListener('click', function () {
-        marriageGiftModal.style.display = 'none';
-    });
-
-    // 저장 버튼 클릭 시 데이터 처리 및 모달 닫기
-    saveMarriageGiftButton.addEventListener('click', function () {
-        const donor = document.getElementById('marriageDonor').value;
-        const amount = document.getElementById('marriageGiftAmount').value;
-
-        if (!amount || isNaN(parseInt(amount))) {
-            alert('올바른 금액을 입력해주세요.');
+        if (totalGiftAmount === 0) {
+            alert('금액을 먼저 입력하세요.');
             return;
         }
 
-        alert(`결혼 증여 저장됨\n증여자: ${donor}\n금액: ${parseInt(amount).toLocaleString()} 원`);
+        remainingAmount.textContent = `${totalGiftAmount.toLocaleString()} 원`;
+        marriageGiftModal.style.display = 'block';
+    });
 
-        // 입력 필드 초기화
-        document.getElementById('marriageGiftAmount').value = '';
+    // 부모별 금액 입력 시 남은 금액 자동 계산
+    function updateRemainingAmount() {
+        const selfAmount = parseInt(selfParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
+        const inLawAmount = parseInt(inLawParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
+
+        const remaining = Math.max(0, totalGiftAmount - (selfAmount + inLawAmount));
+        remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
+    }
+
+    selfParentAmountInput.addEventListener('input', updateRemainingAmount);
+    inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
+
+    // 저장 버튼 클릭
+    saveMarriageGiftButton.addEventListener('click', function () {
+        const selfAmount = parseInt(selfParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
+        const inLawAmount = parseInt(inLawParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
+
+        if (selfAmount + inLawAmount > totalGiftAmount) {
+            alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
+            return;
+        }
+
+        alert(`결혼 증여 저장됨\n자가 부모: ${selfAmount.toLocaleString()} 원\n처가 부모: ${inLawAmount.toLocaleString()} 원`);
+        marriageGiftModal.style.display = 'none';
+    });
+
+    // 모달 닫기 버튼
+    closeMarriageGiftModal.addEventListener('click', function () {
         marriageGiftModal.style.display = 'none';
     });
 });
