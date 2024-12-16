@@ -261,7 +261,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const selfAmount = parseInt(selfParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
         const inLawAmount = parseInt(inLawParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
 
+        // 남은 금액 계산
         const remaining = Math.max(0, totalGiftAmount - (selfAmount + inLawAmount));
+
+        // 남은 금액 UI 업데이트
         remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
     }
 
@@ -273,7 +276,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const selfAmount = parseInt(selfParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
         const inLawAmount = parseInt(inLawParentAmountInput.value.replace(/[^0-9]/g, ''), 10) || 0;
 
-        if (selfAmount + inLawAmount > totalGiftAmount) {
+        // 남은 금액 재확인
+        const remaining = totalGiftAmount - (selfAmount + inLawAmount);
+
+        if (remaining < 0) {
             alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
             return;
         }
