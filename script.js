@@ -214,18 +214,24 @@ selfParentAmountInput.addEventListener('input', updateRemainingAmount);
 inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
 
 saveMarriageGiftButton.addEventListener('click', function () {
+    // 부모별 금액 읽기
     const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
     const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
 
+    // 입력된 부모별 금액 합이 총 증여 금액을 초과하는지 확인
     if (selfAmount + inLawAmount > totalGiftAmount) {
         alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
         return;
     }
 
+    // 전역 변수에 부모별 금액 저장
     marriageGiftSelf = selfAmount;
     marriageGiftInLaw = inLawAmount;
 
+    // 저장 성공 메시지
     alert(`결혼 증여 저장됨\n자가 부모: ${marriageGiftSelf.toLocaleString()} 원\n처가 부모: ${marriageGiftInLaw.toLocaleString()} 원`);
+
+    // 모달 닫기
     marriageGiftModal.style.display = 'none';
 
     // 상태 표시 업데이트
