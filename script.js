@@ -14,6 +14,10 @@ document.addEventListener('input', function (event) {
     }
 });
 
+// 전역 변수 선언
+let marriageGiftSelf = 0; // 자가 부모 증여 금액
+let marriageGiftInLaw = 0; // 처가 부모 증여 금액
+
 // 2. 재산 유형 선택 이벤트 리스너 추가
 document.addEventListener('DOMContentLoaded', function () {
     const assetType = document.getElementById('assetType'); // 재산 유형 select 요소
