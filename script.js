@@ -189,8 +189,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// 전역 변수 선언
+let marriageGiftSelf = 0; // 자가 부모 증여 금액
+let marriageGiftInLaw = 0; // 처가 부모 증여 금액
+
+// 공제 계산 함수에 결혼 증여 공제 추가
 function calculateExemptions() {
-    const marriageExemption = Math.min(marriageGiftSelf + marriageGiftInLaw, 400000000);
+    const marriageExemption = Math.min(marriageGiftSelf + marriageGiftInLaw, 400000000); // 결혼 공제 (최대 4억)
     const relationship = document.getElementById('relationship').value;
     const relationshipExemption = marriageGiftSelf + marriageGiftInLaw > 0 ? 0 : getExemptionAmount(relationship);
 
