@@ -122,7 +122,6 @@ button:hover {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
     z-index: 1000; /* 오버레이보다 위에 표시 */
-    text-align: center;
     box-sizing: border-box;
 }
 
@@ -132,27 +131,12 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
     color: #333;
+    text-align: center;
 }
 
-/* 모달 닫기 버튼 스타일 */
-#closeMarriageGiftModal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #666;
-}
-
-#closeMarriageGiftModal:hover {
-    color: #000;
-}
-
-/* 모달 내부 입력 필드 스타일 */
-#marriageGiftModal select,
-#marriageGiftModal input {
+/* 입력 필드와 셀렉트박스 공통 스타일 */
+.modal-input,
+.modal-select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -162,24 +146,22 @@ button:hover {
     box-sizing: border-box;
 }
 
-/* 모달 버튼 컨테이너 */
-.modalButtons {
-    display: flex;
-    justify-content: center; /* 버튼 중앙 정렬 */
-    gap: 10px; /* 버튼 간 간격 */
-}
-
-/* 저장 버튼 스타일 */
-#saveMarriageGiftButton {
+/* 버튼 공통 스타일 */
+.modal-button {
     width: 100%;
-    max-width: 150px; /* 버튼 최대 너비 */
+    max-width: 150px;
     padding: 10px;
-    background-color: #007BFF; /* 파란색 */
     color: white;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* 저장 버튼 스타일 */
+#saveMarriageGiftButton {
+    background-color: #007BFF; /* 파란색 */
 }
 
 #saveMarriageGiftButton:hover {
@@ -188,19 +170,18 @@ button:hover {
 
 /* 닫기 버튼 스타일 */
 #closeMarriageGiftModal {
-    width: 100%;
-    max-width: 150px; /* 버튼 최대 너비 */
-    padding: 10px;
     background-color: #f44336; /* 빨간색 */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
 }
 
 #closeMarriageGiftModal:hover {
     background-color: #d32f2f; /* 호버 시 진한 빨간색 */
+}
+
+/* 모달 버튼 컨테이너 */
+.modalButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* 버튼 간격 */
 }
 
 /* 하단 버튼 컨테이너 */
