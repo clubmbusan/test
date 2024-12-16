@@ -174,17 +174,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 부모별 금액 입력 시 남은 금액 자동 계산
 function updateRemainingAmount() {
-    const selfAmount = parseCurrency(selfParentAmountInput.value);
-    const inLawAmount = parseCurrency(inLawParentAmountInput.value);
+    const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
+    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
 
     const remaining = Math.max(0, totalGiftAmount - (selfAmount + inLawAmount));
     remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
+
+    // 남은 금액을 totalGiftAmount에 업데이트
+    totalGiftAmount = remaining;
 }
 
 selfParentAmountInput.addEventListener('input', updateRemainingAmount);
 inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
 
-    saveMarriageGiftButton.addEventListener('click', function () {
+saveMarriageGiftButton.addEventListener('click', function () {
     const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
     const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
 
