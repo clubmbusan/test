@@ -174,19 +174,28 @@ selfParentAmountInput.addEventListener('input', updateRemainingAmount);
 inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
 
     saveMarriageGiftButton.addEventListener('click', function () {
-        const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
-        const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
+    const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
+    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
 
-        if (selfAmount + inLawAmount > totalGiftAmount) {
-            alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
-            return;
-        }
+    if (selfAmount + inLawAmount > totalGiftAmount) {
+        alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
+        return;
+    }
 
-        marriageGiftSelf = selfAmount;
-        marriageGiftInLaw = inLawAmount;
+    marriageGiftSelf = selfAmount;
+    marriageGiftInLaw = inLawAmount;
 
-        marriageGiftModal.style.display = 'none';
-    });
+    alert(`결혼 증여 저장됨\n자가 부모: ${marriageGiftSelf.toLocaleString()} 원\n처가 부모: ${marriageGiftInLaw.toLocaleString()} 원`);
+    marriageGiftModal.style.display = 'none';
+
+    // 상태 표시 업데이트
+    const marriageGiftStatus = document.getElementById('marriageGiftStatus');
+    if (marriageGiftStatus) {
+        marriageGiftStatus.textContent = `
+            자가 부모: ${marriageGiftSelf.toLocaleString()} 원, 
+            처가 부모: ${marriageGiftInLaw.toLocaleString()} 원`;
+    }
+});
 
     closeMarriageGiftModal.addEventListener('click', function () {
         marriageGiftModal.style.display = 'none';
