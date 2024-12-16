@@ -285,13 +285,13 @@ function calculateExemptions() {
     return marriageExemption + relationshipExemption;
 }
 
-// 최종 세금 계산 및 출력
 function calculateFinalTax() {
     const giftAmount = getGiftAmount(); // 입력된 증여 금액 가져오기
     const exemptions = calculateExemptions(); // 총 공제 금액 계산
     const taxableAmount = Math.max(0, giftAmount - exemptions); // 과세 금액 계산
     const giftTax = calculateGiftTax(taxableAmount); // 증여세 계산
 
+    // 가산세 계산
     const giftDate = document.getElementById('giftDate').value;
     const submissionDate = document.getElementById('submissionDate').value;
     const { penalty, message } = calculateLatePenalty(submissionDate, giftDate, giftTax);
