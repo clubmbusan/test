@@ -200,41 +200,36 @@ marriageGiftButton.addEventListener('click', function () {
 
 // 부모별 금액 입력 시 남은 금액 자동 계산
 function updateRemainingAmount() {
-    const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
-    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
+    const selfAmount = parseCurrency(selfParentAmountInput.value || '0'); // 자가 부모 금액
+    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0'); // 처가 부모 금액
 
+    // 남은 금액 계산
     const remaining = Math.max(0, totalGiftAmount - (selfAmount + inLawAmount));
     remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
-
-    // 남은 금액을 totalGiftAmount에 업데이트
-    totalGiftAmount = remaining;
 }
 
 selfParentAmountInput.addEventListener('input', updateRemainingAmount);
 inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
 
+// 저장 버튼 클릭 로직
 saveMarriageGiftButton.addEventListener('click', function () {
-    // 부모별 금액 읽기
-    const selfAmount = parseCurrency(selfParentAmountInput.value || '0');
-    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0');
+    const selfAmount = parseCurrency(selfParentAmountInput.value || '0'); // 자가 부모 금액
+    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0'); // 처가 부모 금액
 
-    // 입력된 부모별 금액 합이 총 증여 금액을 초과하는지 확인
     if (selfAmount + inLawAmount > totalGiftAmount) {
         alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
         return;
     }
 
-    // 전역 변수에 부모별 금액 저장
+    // 부모별 금액을 전역 변수에 저장
     marriageGiftSelf = selfAmount;
     marriageGiftInLaw = inLawAmount;
 
-    // 저장 성공 메시지
     alert(`결혼 증여 저장됨\n자가 부모: ${marriageGiftSelf.toLocaleString()} 원\n처가 부모: ${marriageGiftInLaw.toLocaleString()} 원`);
 
-    // 모달 닫기
-    marriageGiftModal.style.display = 'none';
+    marriageGiftModal.style.display = 'none'; // 모달 닫기
 
-    // 상태 표시 업데이트
+    // 상태 업데이트
     const marriageGiftStatus = document.getElementById('marriageGiftStatus');
     if (marriageGiftStatus) {
         marriageGiftStatus.textContent = `
