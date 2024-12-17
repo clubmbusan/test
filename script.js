@@ -168,7 +168,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// *** 결혼 증여 모달 로직 ***
+    let totalGiftAmount = 0; // 총 증여 금액
+    let fatherGiftAmount = 0; // 부 증여 금액
+    let motherGiftAmount = 0; // 모 증여 금액
+
 // *** 결혼 증여 모달 로직 ***
 document.addEventListener('DOMContentLoaded', function () {
     const marriageGiftButton = document.getElementById('marriageGiftButton');
@@ -179,11 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const fatherAmountInput = document.getElementById('fatherAmountInput'); // 부 입력
     const motherAmountInput = document.getElementById('motherAmountInput'); // 모 입력
     const remainingAmount = document.getElementById('remainingAmount'); // 남은 금액 표시
-
-    let totalGiftAmount = 0; // 총 증여 금액
-    let fatherGiftAmount = 0; // 부 증여 금액
-    let motherGiftAmount = 0; // 모 증여 금액
-
+   
     // 모달 열기 버튼
     marriageGiftButton.addEventListener('click', function () {
         const cashInput = document.getElementById('cashAmount');
