@@ -230,7 +230,7 @@ saveMarriageGiftButton.addEventListener('click', function () {
     alert(`결혼 증여 저장됨\n부: ${fatherGiftAmount.toLocaleString()} 원\n모: ${motherGiftAmount.toLocaleString()} 원`);
     marriageGiftModal.style.display = 'none';
 });
-
+});
 // 결혼 공제 계산 함수
 function calculateMarriageExemption() {
     const maxExemptionPerParent = 150000000; // 부모 각각 최대 1억 5천만 원
