@@ -311,6 +311,6 @@ document.getElementById('donationTaxButton').addEventListener('click', function 
     extendedPeriodContainer.style.display = newDisplay;
 });
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
-
+});
 
                           
