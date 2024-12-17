@@ -261,11 +261,11 @@ function calculateMarriageExemption() {
 // 최종 공제 계산 함수
 function calculateExemptions() {
     const marriageExemption = calculateMarriageExemption(); // 결혼 공제 계산
-    const remainingGiftAmount = Math.max(0, totalGiftAmount - marriageExemption); // 남은 금액
+    const remainingGiftAmount = Math.max(0, totalGiftAmount - marriageExemption); // 결혼 공제 적용 후 남은 금액
 
-    // 관계 공제 계산 (최대 5천만 원)
+    // 관계 공제 계산: 결혼 증여가 적용되지 않은 경우에만 관계 공제를 적용
     const relationship = document.getElementById('relationship').value;
-    const relationshipExemption = Math.min(remainingGiftAmount, getExemptionAmount(relationship));
+    const relationshipExemption = (marriageExemption > 0) ? 0 : Math.min(remainingGiftAmount, getExemptionAmount(relationship));
 
     return marriageExemption + relationshipExemption; // 결혼 공제 + 관계 공제 반환
 }
