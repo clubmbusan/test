@@ -215,27 +215,37 @@ document.addEventListener('DOMContentLoaded', function () {
     fatherAmountInput.addEventListener('input', updateRemainingAmount);
     motherAmountInput.addEventListener('input', updateRemainingAmount);
 
-    // 저장 버튼 클릭 (모달에서 입력값을 저장)
-    saveMarriageGiftButton.addEventListener('click', function () {
-        const fatherAmount = parseCurrency(fatherAmountInput.value || '0');
-        const motherAmount = parseCurrency(motherAmountInput.value || '0');
+   // 저장 버튼 클릭 (모달에서 입력값을 저장)
+saveMarriageGiftButton.addEventListener('click', function () {
+    const fatherAmount = parseCurrency(fatherAmountInput.value || '0'); // 부 입력값
+    const motherAmount = parseCurrency(motherAmountInput.value || '0'); // 모 입력값
 
-        if (fatherAmount + motherAmount > totalGiftAmount) {
-            alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
-            return;
-        }
+    const maxTotalExemption = 250000000; // 총 공제 한도: 2억 5천만 원
+    const maxFatherExemption = 150000000; // 부 최대 공제 한도: 1억 5천만 원
+    const maxMotherExemption = 100000000; // 모 최대 공제 한도: 1억 원
 
-        // 각각 최대 1억 5천만 원까지만 저장
-        fatherGiftAmount = Math.min(fatherAmount, 150000000);
-        motherGiftAmount = Math.min(motherAmount, 150000000);
+    let remainingExemption = maxTotalExemption; // 남은 총 공제 한도
 
-        alert(`결혼 증여 저장됨\n부: ${fatherGiftAmount.toLocaleString()} 원\n모: ${motherGiftAmount.toLocaleString()} 원`);
-        marriageGiftModal.style.display = 'none';
-    });
+    // 누가 먼저 큰 금액을 공제받는지 결정
+    if (fatherAmount >= motherAmount) {
+        // 아버지가 먼저 공제 적용
+        fatherGiftAmount = Math.min(fatherAmount, maxFatherExemption, remainingExemption);
+        remainingExemption -= fatherGiftAmount;
 
-    closeMarriageGiftModal.addEventListener('click', function () {
-        marriageGiftModal.style.display = 'none';
-    });
+        // 어머니 공제 적용
+        motherGiftAmount = Math.min(motherAmount, maxMotherExemption, remainingExemption);
+    } else {
+        // 어머니가 먼저 공제 적용
+        motherGiftAmount = Math.min(motherAmount, maxMotherExemption, remainingExemption);
+        remainingExemption -= motherGiftAmount;
+
+        // 아버지 공제 적용
+        fatherGiftAmount = Math.min(fatherAmount, maxFatherExemption, remainingExemption);
+    }
+
+    // 사용자에게 저장된 결과 알림
+    alert(`결혼 증여 저장됨\n부: ${fatherGiftAmount.toLocaleString()} 원\n모: ${motherGiftAmount.toLocaleString()} 원`);
+    marriageGiftModal.style.display = 'none';
 });
 
 // 결혼 공제 계산 함수
