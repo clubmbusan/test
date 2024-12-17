@@ -237,8 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 결혼 공제 계산 함수
 function calculateMarriageExemption() {
-    const maxExemptionPerParent = 150000000; // 부모 각각 최대 1억 5천만 원
+    const maxExemptionPerParent = 150000000; // 부모 각각 최대 공제 1억 5천만 원
 
+    // 저장된 값(모달에서 입력 후 저장된 값)을 사용하여 공제 계산
     const fatherExemption = Math.min(fatherGiftAmount, maxExemptionPerParent);
     const motherExemption = Math.min(motherGiftAmount, maxExemptionPerParent);
 
@@ -248,21 +249,22 @@ function calculateMarriageExemption() {
 // 최종 공제 계산 함수
 function calculateExemptions() {
     const marriageExemption = calculateMarriageExemption(); // 결혼 공제 계산
-    const remainingGiftAmount = Math.max(0, totalGiftAmount - marriageExemption); // 남은 금액
 
-    // 관계 공제 계산 (최대 5천만 원)
+    // 관계 공제 계산 (남은 금액에서 최대 5천만 원까지 적용)
+    const remainingGiftAmount = Math.max(0, totalGiftAmount - marriageExemption);
     const relationship = document.getElementById('relationship').value;
     const relationshipExemption = Math.min(remainingGiftAmount, getExemptionAmount(relationship));
 
-    return marriageExemption + relationshipExemption; // 결혼 공제 + 관계 공제 반환
+    // 최종 공제 금액 반환 (결혼 공제 + 관계 공제)
+    return marriageExemption + relationshipExemption;
 }
 
-// 최종 세금 계산
+// 최종 세금 계산 (계산하기 버튼)
 function calculateFinalTax() {
-    const giftAmount = getGiftAmount();
-    const exemptions = calculateExemptions();
-    const taxableAmount = Math.max(0, giftAmount - exemptions);
-    const giftTax = calculateGiftTax(taxableAmount);
+    const giftAmount = getGiftAmount(); // 총 증여 금액
+    const exemptions = calculateExemptions(); // 공제 금액
+    const taxableAmount = Math.max(0, giftAmount - exemptions); // 과세 금액
+    const giftTax = calculateGiftTax(taxableAmount); // 증여세 계산
 
     // 가산세 계산
     const giftDate = document.getElementById('giftDate').value;
