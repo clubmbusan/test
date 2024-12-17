@@ -22,35 +22,13 @@ form label {
     margin: 10px 0 5px;
 }
 
-form input, form select,
-.modal-input, .modal-select {
+form input, form select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 16px;
     box-sizing: border-box;
-}
-
-button, .modal-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    text-align: center;
-    width: 100%;
-    max-width: 600px;
-    height: 40px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-}
-
-button:hover, .modal-button:hover {
-    background-color: #45a049;
 }
 
 /* 과거 증여 금액 필드 스타일 */
@@ -61,119 +39,44 @@ button:hover, .modal-button:hover {
     margin-bottom: 10px;
 }
 
-.amount-input, .date-input {
-    flex: 1;
+.amount-input {
+    flex: 3; /* 금액 입력 칸 넓이 */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    height: 40px; /* 동일 높이 */
     box-sizing: border-box;
-    height: 40px;
+}
+
+.date-input {
+    flex: 2; /* 날짜 입력 칸 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 40px; /* 동일 높이 */
+    box-sizing: border-box;
 }
 
 .remove-gift-button {
-    flex: 0.5;
+    flex: 1; /* 삭제 버튼 */
     background-color: #f44336;
     color: white;
     border: none;
     padding: 5px 10px;
+    height: 40px;
     cursor: pointer;
     border-radius: 5px;
     font-size: 14px;
     box-sizing: border-box;
-    height: 40px;
 }
 
+/* 삭제 버튼 호버 */
 .remove-gift-button:hover {
     background-color: #d32f2f;
 }
 
-/* 모달 전체 배경(오버레이) 스타일 */
-#marriageGiftModalOverlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
-
-/* 모달 창 스타일 */
-#marriageGiftModal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 600px; /* 계산기와 동일한 최대 너비 */
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    box-sizing: border-box;
-}
-
-#marriageGiftModal h3 {
-    margin: 0 0 20px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-}
-
-/* 모달 입력 필드 스타일 */
-#marriageGiftModal select,
-#marriageGiftModal input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-/* 모달 버튼 컨테이너 */
-.modalButtons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-/* 저장 버튼 */
-#saveMarriageGiftButton {
-    background-color: #007BFF;
-    color: white;
-}
-
-#saveMarriageGiftButton:hover {
-    background-color: #0056b3;
-}
-
-/* 닫기 버튼 */
-#closeMarriageGiftModal {
-    background-color: #f44336;
-    color: white;
-}
-
-#closeMarriageGiftModal:hover {
-    background-color: #d32f2f;
-}
-
-/* 하단 추가 버튼 컨테이너 */
-#extraTaxButtons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-#extraTaxButtons button {
+/* 녹색 버튼 (공통) */
+button {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -182,11 +85,69 @@ button:hover, .modal-button:hover {
     cursor: pointer;
     border-radius: 5px;
     text-align: center;
-    width: 100%;
-    max-width: 557px;
+    width: 100%; /* 과거 증여 금액 필드와 동일한 너비 */
+    max-width: 600px; /* 최대 너비 설정 */
+    height: 40px; /* 동일 높이 */
     box-sizing: border-box;
+    margin-bottom: 10px;
 }
 
-#extraTaxButtons button:hover {
+button:hover {
     background-color: #45a049;
+}
+
+/* 하단 버튼 컨테이너 */
+#extraTaxButtons {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: center; /* 중앙 정렬 */
+    gap: 10px; /* 버튼 간 간격 */
+    margin-top: 20px; /* 계산기와의 간격 */
+}
+
+/* 하단 버튼 스타일 */
+#extraTaxButtons button {
+    background-color:; /* 녹색 */
+    color: white;
+    border: none; /* 테두리 제거 */
+    padding: 10px 20px; /* 버튼 내부 여백 */
+    font-size: 16px; /* 텍스트 크기 */
+    cursor: pointer; /* 마우스 커서 */
+    border-radius: 5px; /* 둥근 모서리 */
+    text-align: center;
+    width: 100%; /* 계산기 내부 버튼과 동일한 너비 */
+    max-width: 557px; /* 버튼 최대 너비 */
+    box-sizing: border-box; /* 크기 계산 통일 */
+}
+
+/* 하단 버튼 Hover 효과 */
+#extraTaxButtons button:hover {
+    background-color: #45a049; /* Hover 시 어두운 녹색 */
+}
+/* 추가된 스타일 */
+/* 저장 버튼 스타일 (붉은색) */
+#saveMarriageGiftButton {
+    background-color: #dc3545;
+    color: white;
+}
+#saveMarriageGiftButton:hover {
+    background-color: #c82333;
+}
+
+/* 닫기 버튼 스타일 (회색) */
+#closeMarriageGiftModal {
+    background-color: #6c757d;
+    color: white;
+}
+#closeMarriageGiftModal:hover {
+    background-color: #5a6268;
+}
+
+/* 신고하기 버튼 스타일 (푸른색) */
+#donationTaxButton {
+    background-color: #007bff;
+    color: white;
+}
+#donationTaxButton:hover {
+    background-color: #0056b3;
 }
