@@ -250,9 +250,12 @@ function calculateExemptions() {
     // 결혼 증여 공제 계산: 자가 부모 + 처가 부모 금액 (최대 4억)
     const marriageExemption = Math.min(marriageGiftSelf + marriageGiftInLaw, 400000000);
 
-    // 관계 공제 계산: 결혼 증여 공제가 없는 경우에만 적용
+    // 결혼 증여 공제 이후 남은 금액 계산
+    const remainingGiftAmount = Math.max(0, getGiftAmount() - marriageExemption);
+
+    // 관계 공제 계산: 남은 금액에 대해 관계 공제 적용
     const relationship = document.getElementById('relationship').value;
-    const relationshipExemption = marriageGiftSelf + marriageGiftInLaw > 0 ? 0 : getExemptionAmount(relationship);
+    const relationshipExemption = Math.min(remainingGiftAmount, getExemptionAmount(relationship));
 
     // 총 공제 금액 반환
     return marriageExemption + relationshipExemption;
