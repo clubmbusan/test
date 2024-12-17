@@ -26,7 +26,6 @@ const applicableFields = [
         target.value = parseInt(rawValue, 10).toLocaleString(); // 숫자에 콤마 추가
     }
 });
-});
 
 // 재산 유형 선택 이벤트 리스너
 document.addEventListener('DOMContentLoaded', function () {
