@@ -169,102 +169,94 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // *** 결혼 증여 모달 로직 ***
+// *** 결혼 증여 모달 로직 ***
 document.addEventListener('DOMContentLoaded', function () {
     const marriageGiftButton = document.getElementById('marriageGiftButton');
     const marriageGiftModal = document.getElementById('marriageGiftModal');
     const closeMarriageGiftModal = document.getElementById('closeMarriageGiftModal');
     const saveMarriageGiftButton = document.getElementById('saveMarriageGiftButton');
 
-    const selfParentAmountInput = document.getElementById('selfParentAmountInput');
-    const inLawParentAmountInput = document.getElementById('inLawParentAmountInput');
-    const remainingAmount = document.getElementById('remainingAmount');
+    const fatherAmountInput = document.getElementById('fatherAmountInput'); // 부 입력
+    const motherAmountInput = document.getElementById('motherAmountInput'); // 모 입력
+    const remainingAmount = document.getElementById('remainingAmount'); // 남은 금액 표시
 
     let totalGiftAmount = 0; // 총 증여 금액
-  
+    let fatherGiftAmount = 0; // 부 증여 금액
+    let motherGiftAmount = 0; // 모 증여 금액
+
     // 모달 열기 버튼
-marriageGiftButton.addEventListener('click', function () {
-    const cashInput = document.getElementById('cashAmount'); // 현금 금액 입력 필드
-    totalGiftAmount = parseCurrency(cashInput.value || '0'); // 현금 금액 파싱하여 숫자로 변환
+    marriageGiftButton.addEventListener('click', function () {
+        const cashInput = document.getElementById('cashAmount');
+        totalGiftAmount = parseCurrency(cashInput.value || '0');
 
-    if (totalGiftAmount === 0) {
-        alert('증여 금액을 먼저 입력하세요.');
-        return;
+        if (totalGiftAmount === 0) {
+            alert('증여 금액을 먼저 입력하세요.');
+            return;
+        }
+
+        remainingAmount.textContent = `${totalGiftAmount.toLocaleString()} 원`;
+        marriageGiftModal.style.display = 'block';
+    });
+
+    // 부모별 금액 입력 시 남은 금액 계산
+    function updateRemainingAmount() {
+        const fatherAmount = parseCurrency(fatherAmountInput.value || '0');
+        const motherAmount = parseCurrency(motherAmountInput.value || '0');
+
+        const remaining = Math.max(0, totalGiftAmount - (fatherAmount + motherAmount));
+        remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
     }
 
-    // 남은 금액 초기화
-    remainingAmount.textContent = `${totalGiftAmount.toLocaleString()} 원`;
-    marriageGiftModal.style.display = 'block'; // 모달 표시
-});
+    fatherAmountInput.addEventListener('input', updateRemainingAmount);
+    motherAmountInput.addEventListener('input', updateRemainingAmount);
 
-// 부모별 금액 입력 시 남은 금액 자동 계산
-function updateRemainingAmount() {
-    const selfAmount = parseCurrency(selfParentAmountInput.value || '0'); // 자가 부모 금액
-    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0'); // 처가 부모 금액
+    // 저장 버튼 클릭
+    saveMarriageGiftButton.addEventListener('click', function () {
+        const fatherAmount = parseCurrency(fatherAmountInput.value || '0');
+        const motherAmount = parseCurrency(motherAmountInput.value || '0');
 
-    // 남은 금액 계산
-    const remaining = Math.max(0, totalGiftAmount - (selfAmount + inLawAmount));
-    remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
-}
+        if (fatherAmount + motherAmount > totalGiftAmount) {
+            alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
+            return;
+        }
 
-selfParentAmountInput.addEventListener('input', updateRemainingAmount);
-inLawParentAmountInput.addEventListener('input', updateRemainingAmount);
+        // 각각의 부모 금액 저장
+        fatherGiftAmount = Math.min(fatherAmount, 150000000); // 부 최대 1억 5천
+        motherGiftAmount = Math.min(motherAmount, 150000000); // 모 최대 1억 5천
 
-// 저장 버튼 클릭 로직
-saveMarriageGiftButton.addEventListener('click', function () {
-    const selfAmount = parseCurrency(selfParentAmountInput.value || '0'); // 자가 부모 금액
-    const inLawAmount = parseCurrency(inLawParentAmountInput.value || '0'); // 처가 부모 금액
-
-    if (selfAmount + inLawAmount > totalGiftAmount) {
-        alert('입력 금액이 증여 총액을 초과할 수 없습니다.');
-        return;
-    }
-
-    // 부모별 금액을 전역 변수에 저장
-    marriageGiftSelf = selfAmount;
-    marriageGiftInLaw = inLawAmount;
-
-    alert(`결혼 증여 저장됨\n자가 부모: ${marriageGiftSelf.toLocaleString()} 원\n처가 부모: ${marriageGiftInLaw.toLocaleString()} 원`);
-
-    marriageGiftModal.style.display = 'none'; // 모달 닫기
-
-    // 상태 업데이트
-    const marriageGiftStatus = document.getElementById('marriageGiftStatus');
-    if (marriageGiftStatus) {
-        marriageGiftStatus.textContent = `
-            자가 부모: ${marriageGiftSelf.toLocaleString()} 원, 
-            처가 부모: ${marriageGiftInLaw.toLocaleString()} 원`;
-    }
-});
+        alert(`결혼 증여 저장됨\n부: ${fatherGiftAmount.toLocaleString()} 원\n모: ${motherGiftAmount.toLocaleString()} 원`);
+        marriageGiftModal.style.display = 'none';
+    });
 
     closeMarriageGiftModal.addEventListener('click', function () {
         marriageGiftModal.style.display = 'none';
     });
 });
 
-// 전역 변수 선언
-let marriageGiftSelf = 0; // 자가 부모 증여 금액
-let marriageGiftInLaw = 0; // 처가 부모 증여 금액
+// 결혼 공제 계산 함수
+function calculateMarriageExemption() {
+    const maxExemptionPerParent = 150000000; // 부모 각각 최대 공제 1억 5천
 
-// 공제 계산 함수에 결혼 증여 공제 추가
-function calculateExemptions() {
-    // 결혼 증여 공제 최대 한도
-    const maxMarriageExemptionPerSide = 200000000; // 양가 각각 최대 2억
-    const maxRelationshipExemption = 50000000; // 관계 공제 최대 5천만 원 (한 명만 적용)
+    // 부와 모의 결혼 공제 합산
+    const fatherExemption = Math.min(fatherGiftAmount, maxExemptionPerParent);
+    const motherExemption = Math.min(motherGiftAmount, maxExemptionPerParent);
 
-    // 결혼 증여 공제 계산
-    const marriageExemptionSelf = Math.min(marriageGiftSelf, maxMarriageExemptionPerSide); // 친가 결혼 공제
-    const marriageExemptionInLaw = Math.min(marriageGiftInLaw, maxMarriageExemptionPerSide); // 처가 결혼 공제
-    const totalMarriageExemption = marriageExemptionSelf + marriageExemptionInLaw; // 총 결혼 공제
-
-    // 관계 공제 계산 (양가 각각 5천만 원씩 적용)
-    const relationshipExemptionSelf = marriageGiftSelf > 0 ? maxRelationshipExemption : 0; // 친가 관계 공제
-    const relationshipExemptionInLaw = marriageGiftInLaw > 0 ? maxRelationshipExemption : 0; // 처가 관계 공제
-    const totalRelationshipExemption = relationshipExemptionSelf + relationshipExemptionInLaw; // 총 관계 공제
-
-    // 최종 공제 금액 반환 (결혼 증여 공제 + 관계 공제)
-    return totalMarriageExemption + totalRelationshipExemption;
+    return fatherExemption + motherExemption;
 }
 
+// 최종 공제 계산 함수
+function calculateExemptions() {
+    const marriageExemption = calculateMarriageExemption();
+    const remainingGiftAmount = Math.max(0, totalGiftAmount - marriageExemption);
+
+    // 관계 공제 계산 (5천만 원 적용)
+    const relationship = document.getElementById('relationship').value;
+    const relationshipExemption = Math.min(remainingGiftAmount, getExemptionAmount(relationship));
+
+    return marriageExemption + relationshipExemption;
+}
+
+// 최종 세금 계산
 function calculateFinalTax() {
     const giftAmount = getGiftAmount(); // 입력된 증여 금액 가져오기
     const exemptions = calculateExemptions(); // 총 공제 금액 계산
