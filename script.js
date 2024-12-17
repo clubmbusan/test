@@ -184,10 +184,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const motherAmountInput = document.getElementById('motherAmountInput'); // 모 입력 필드
     const remainingAmount = document.getElementById('remainingAmount'); // 남은 금액 표시
 
+    let remainingGiftAmount = 0; // 남은 금액 (별도 관리)
+
     // 모달 열기 버튼
     marriageGiftButton.addEventListener('click', function () {
         const cashInput = document.getElementById('cashAmount');
-        totalGiftAmount = parseCurrency(cashInput.value || '0');
+        totalGiftAmount = parseCurrency(cashInput.value || '0'); // 최초 증여 금액 유지
+        remainingGiftAmount = totalGiftAmount; // 남은 금액 초기화
 
         if (totalGiftAmount === 0) {
             alert('증여 금액을 먼저 입력하세요.');
@@ -195,18 +198,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 남은 금액 초기화
-        remainingAmount.textContent = `${totalGiftAmount.toLocaleString()} 원`;
+        remainingAmount.textContent = `${remainingGiftAmount.toLocaleString()} 원`;
         marriageGiftModal.style.display = 'block';
     });
 
     // 부모별 금액 입력 시 남은 금액 자동 계산
     function updateRemainingAmount() {
-        const fatherAmount = parseCurrency(fatherAmountInput.value || '0'); // 부 입력값
-        const motherAmount = parseCurrency(motherAmountInput.value || '0'); // 모 입력값
+        const fatherAmount = parseCurrency(fatherAmountInput.value || '0');
+        const motherAmount = parseCurrency(motherAmountInput.value || '0');
 
-        // 남은 금액 계산
-        const remaining = Math.max(0, totalGiftAmount - (fatherAmount + motherAmount));
-        remainingAmount.textContent = `${remaining.toLocaleString()} 원`;
+        // 남은 금액 계산 (totalGiftAmount는 변경하지 않음)
+        remainingGiftAmount = Math.max(0, totalGiftAmount - (fatherAmount + motherAmount));
+        remainingAmount.textContent = `${remainingGiftAmount.toLocaleString()} 원`;
     }
 
     fatherAmountInput.addEventListener('input', updateRemainingAmount);
@@ -237,9 +240,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 결혼 공제 계산 함수
 function calculateMarriageExemption() {
-    const maxExemptionPerParent = 150000000; // 부모 각각 최대 공제 1억 5천만 원
+    const maxExemptionPerParent = 150000000; // 부모 각각 최대 1억 5천만 원
 
-    // 저장된 값(모달에서 입력 후 저장된 값)을 사용하여 공제 계산
     const fatherExemption = Math.min(fatherGiftAmount, maxExemptionPerParent);
     const motherExemption = Math.min(motherGiftAmount, maxExemptionPerParent);
 
@@ -249,14 +251,13 @@ function calculateMarriageExemption() {
 // 최종 공제 계산 함수
 function calculateExemptions() {
     const marriageExemption = calculateMarriageExemption(); // 결혼 공제 계산
+    const remainingGiftAmount = Math.max(0, totalGiftAmount - marriageExemption); // 남은 금액
 
-    // 관계 공제 계산 (남은 금액에서 최대 5천만 원까지 적용)
-    const remainingGiftAmount = Math.max(0, totalGiftAmount - marriageExemption);
+    // 관계 공제 계산 (최대 5천만 원)
     const relationship = document.getElementById('relationship').value;
     const relationshipExemption = Math.min(remainingGiftAmount, getExemptionAmount(relationship));
 
-    // 최종 공제 금액 반환 (결혼 공제 + 관계 공제)
-    return marriageExemption + relationshipExemption;
+    return marriageExemption + relationshipExemption; // 결혼 공제 + 관계 공제 반환
 }
 
 // 최종 세금 계산 (계산하기 버튼)
