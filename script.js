@@ -180,9 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const remainingAmount = document.getElementById('remainingAmount');
 
     let totalGiftAmount = 0; // 총 증여 금액
-    let marriageGiftSelf = 0; // 자가 부모 증여 금액
-    let marriageGiftInLaw = 0; // 처가 부모 증여 금액
-
+  
     // 모달 열기 버튼
 marriageGiftButton.addEventListener('click', function () {
     const cashInput = document.getElementById('cashAmount'); // 현금 금액 입력 필드
@@ -285,4 +283,18 @@ function calculateFinalTax() {
     `;
 }
 
+// 증여세 신고 버튼 클릭 이벤트
+document.getElementById('donationTaxButton').addEventListener('click', function () {
+    const giftDateContainer = document.getElementById('giftDateContainer');
+    const submissionDateContainer = document.getElementById('submissionDateContainer');
+    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
+
+    // 숨겨진 입력 필드 토글 (보이기/숨기기)
+    const isVisible = giftDateContainer.style.display === 'block';
+    const newDisplay = isVisible ? 'none' : 'block';
+
+    giftDateContainer.style.display = newDisplay;
+    submissionDateContainer.style.display = newDisplay;
+    extendedPeriodContainer.style.display = newDisplay;
+});
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
