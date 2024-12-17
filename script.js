@@ -247,16 +247,22 @@ let marriageGiftInLaw = 0; // 처가 부모 증여 금액
 
 // 공제 계산 함수에 결혼 증여 공제 추가
 function calculateExemptions() {
-    // 결혼 증여 공제: 부모 각각 최대 1억 원 (합계 2억 원)
-    const marriageExemptionBase = Math.min(marriageGiftSelf, 100000000) + Math.min(marriageGiftInLaw, 100000000);
+    // 결혼 증여 공제 최대 한도
+    const maxMarriageExemptionPerSide = 200000000; // 양가 각각 최대 2억
+    const maxRelationshipExemption = 50000000; // 관계 공제 최대 5천만 원 (한 명만 적용)
 
-    // 관계 공제: 부모 각각 추가 5천만 원씩 공제 (총합 1억 원)
-    const relationshipExemptionBase = Math.min(marriageGiftSelf, 50000000) + Math.min(marriageGiftInLaw, 50000000);
+    // 결혼 증여 공제 계산
+    const marriageExemptionSelf = Math.min(marriageGiftSelf, maxMarriageExemptionPerSide); // 친가 결혼 공제
+    const marriageExemptionInLaw = Math.min(marriageGiftInLaw, maxMarriageExemptionPerSide); // 처가 결혼 공제
+    const totalMarriageExemption = marriageExemptionSelf + marriageExemptionInLaw; // 총 결혼 공제
 
-    // 결혼 증여 공제 + 관계 공제를 합산하여 반환 (최대 2억 5천만 원)
-    const totalExemption = marriageExemptionBase + relationshipExemptionBase;
+    // 관계 공제 계산 (양가 각각 5천만 원씩 적용)
+    const relationshipExemptionSelf = marriageGiftSelf > 0 ? maxRelationshipExemption : 0; // 친가 관계 공제
+    const relationshipExemptionInLaw = marriageGiftInLaw > 0 ? maxRelationshipExemption : 0; // 처가 관계 공제
+    const totalRelationshipExemption = relationshipExemptionSelf + relationshipExemptionInLaw; // 총 관계 공제
 
-    return totalExemption; // 총 공제 금액 반환
+    // 최종 공제 금액 반환 (결혼 증여 공제 + 관계 공제)
+    return totalMarriageExemption + totalRelationshipExemption;
 }
 
 function calculateFinalTax() {
