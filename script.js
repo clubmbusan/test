@@ -295,8 +295,13 @@ function calculateFinalTax() {
     const originalGiftTax = calculateGiftTax(taxableAmount, false); // 감면 적용 전
     const giftTax = calculateGiftTax(taxableAmount, isYouth); // 감면 적용 여부 반영
 
-    // 감면 금액 계산
-    const youthReduction = originalGiftTax - giftTax; // 청년 감면 금액
+   // 청년 감면 적용
+    let youthReduction = 0;
+    if (isYouth) {
+       const reducedTax = calculateGiftTax(taxableAmount, true); // 감면 적용된 세율로 계산
+       youthReduction = originalGiftTax - reducedTax; // 감면 금액 계산
+       giftTax = reducedTax; // 감면 후 세금
+    }
 
     // 가산세 계산
     const giftDate = document.getElementById('giftDate').value;
