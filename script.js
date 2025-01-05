@@ -340,6 +340,5 @@ document.getElementById('donationTaxButton').addEventListener('click', function 
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
 
 
-});
 
                           
