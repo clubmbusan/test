@@ -296,9 +296,18 @@ function calculateFinalTax() {
     // 공제 계산
     const { relationshipExemption, marriageExemption, totalExemption } = calculateExemptions(totalGiftAmount, relationship);
 
-    // 과세 금액 및 증여세 계산
+    // 과세 금액 계산
     const taxableAmount = Math.max(0, totalGiftAmount - totalExemption);
-    const giftTax = calculateGiftTax(taxableAmount);
+
+    // 청년 여부 확인 (드롭다운 값 읽기)
+    const isYouth = document.getElementById('isYouthDropdown').value === 'yes';
+
+    // 증여세 계산
+    const originalGiftTax = calculateGiftTax(taxableAmount, false); // 감면 적용 전
+    const giftTax = calculateGiftTax(taxableAmount, isYouth); // 감면 적용 여부 반영
+
+    // 감면 금액 계산
+    const youthReduction = originalGiftTax - giftTax; // 청년 감면 금액
 
     // 가산세 계산
     const giftDate = document.getElementById('giftDate').value;
@@ -316,7 +325,9 @@ function calculateFinalTax() {
         <p>결혼 공제: ${marriageExemption.toLocaleString()} 원</p>
         <p>총 공제 금액: ${totalExemption.toLocaleString()} 원</p>
         <p>과세 금액: ${taxableAmount.toLocaleString()} 원</p>
-        <p>증여세: ${giftTax.toLocaleString()} 원</p>
+        <p>증여세 (감면 전): ${originalGiftTax.toLocaleString()} 원</p>
+        <p>청년 증여세 감면 금액: ${youthReduction.toLocaleString()} 원</p>
+        <p>증여세 (감면 후): ${giftTax.toLocaleString()} 원</p>
         <p>가산세: ${penalty.toLocaleString()} 원 (${message})</p>
         <p><strong>최종 납부세액: ${(totalTax).toLocaleString()} 원</strong></p>
     `;
