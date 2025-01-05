@@ -108,11 +108,11 @@ function calculateGiftTax(taxableAmount) {
 // 청년 감면 적용
 function applyYouthReduction(taxableAmount, originalGiftTax) {
     const taxBrackets = [
-        { limit: 200000000, rate: 0.1 }, // 2억 이하
-        { limit: 500000000, rate: 0.2 }, // 2억 초과 ~ 5억 이하
-        { limit: 1000000000, rate: 0.3 }, // 5억 초과 ~ 10억 이하
-        { limit: 2000000000, rate: 0.4 }, // 10억 초과 ~ 20억 이하
-        { limit: Infinity, rate: 0.45 } // 20억 초과
+        { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
+        { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
+        { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
+        { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
+        { limit: Infinity, rate: 0.45, deduction: 370000000 } // 20억 초과
     ];
 
     let reducedTax = 0;
@@ -125,14 +125,15 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
             previousLimit = bracket.limit;
         } else {
             reducedTax += (taxableAmount - previousLimit) * effectiveRate;
+            reducedTax -= bracket.deduction; // 누진 공제 고려
             break;
         }
     }
 
-    const youthReduction = originalGiftTax - reducedTax;
+    reducedTax = Math.max(reducedTax, 0); // 음수 방지
+    const youthReduction = Math.max(originalGiftTax - reducedTax, 0); // 감면 금액 음수 방지
     return { reducedTax, youthReduction };
 }
-
 
 // 가산세 계산 로직
 function calculateLatePenalty(submissionDate, giftDate, giftTax) {
