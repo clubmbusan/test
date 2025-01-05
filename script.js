@@ -1,4 +1,4 @@
-// 유틸리티 함수: 콤마 제거 후 숫자로 변환
+/ 유틸리티 함수: 콤마 제거 후 숫자로 변환
 function parseCurrency(value) {
     return parseInt(value.replace(/[^0-9]/g, ''), 10) || 0;
 }
@@ -181,13 +181,13 @@ document.addEventListener('DOMContentLoaded', function () {
         container.appendChild(newGiftEntry);
     });
 });
-
-   // 전역 변수 선언    
+   
+       // 전역 변수 선언
 let totalGiftAmount = 0; // 총 증여 금액
 let fatherGiftAmount = 0; // 부 증여 금액
 let motherGiftAmount = 0; // 모 증여 금액
 
-// *** 결혼 증여 모달 로직 ***
+// DOMContentLoaded 이벤트
 document.addEventListener('DOMContentLoaded', function () {
     const marriageGiftButton = document.getElementById('marriageGiftButton');
     const marriageGiftModal = document.getElementById('marriageGiftModal');
@@ -246,19 +246,18 @@ document.addEventListener('DOMContentLoaded', function () {
     closeMarriageGiftModal.addEventListener('click', function () {
         marriageGiftModal.style.display = 'none';
     });
+
+    // 계산 버튼 이벤트
+    document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
 });
 
 // 결혼 공제 계산 함수
 function calculateMarriageExemption(fatherAmount, motherAmount) {
     const maxMarriageExemption = 100000000; // 부모 합산 최대 공제 한도: 1억 원
-
-    // 부모 각각의 공제 합산 계산
     const totalGiftAmountFromParents = fatherAmount + motherAmount;
 
-    // 합산 공제가 최대 1억 원을 초과하지 않도록 제한
-    const totalMarriageExemption = Math.min(totalGiftAmountFromParents, maxMarriageExemption);
-
-    return totalMarriageExemption; // 최종 결혼 공제 금액 반환
+    // 공제 최대 한도를 초과하지 않도록 제한
+    return Math.min(totalGiftAmountFromParents, maxMarriageExemption);
 }
 
 // 최종 공제 계산 함수
@@ -322,13 +321,13 @@ function calculateFinalTax() {
     `;
 }
 
-// 증여세 신고 버튼 클릭 이벤트
+// 증여세 신고 버튼 이벤트
 document.getElementById('donationTaxButton').addEventListener('click', function () {
     const giftDateContainer = document.getElementById('giftDateContainer');
     const submissionDateContainer = document.getElementById('submissionDateContainer');
     const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
 
-    // 숨겨진 입력 필드 토글 (보이기/숨기기)
+    // 숨김/표시 토글
     const isVisible = giftDateContainer.style.display === 'block';
     const newDisplay = isVisible ? 'none' : 'block';
 
@@ -336,6 +335,7 @@ document.getElementById('donationTaxButton').addEventListener('click', function 
     submissionDateContainer.style.display = newDisplay;
     extendedPeriodContainer.style.display = newDisplay;
 });
+
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
 });
 
