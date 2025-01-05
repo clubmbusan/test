@@ -292,10 +292,10 @@ function calculateFinalTax() {
     const isYouth = document.getElementById('isYouthDropdown').value === 'yes';
 
     // 증여세 계산
-    const originalGiftTax = calculateGiftTax(taxableAmount, false); // 감면 적용 전
-    const giftTax = calculateGiftTax(taxableAmount, isYouth); // 감면 적용 여부 반영
+    let giftTax = calculateGiftTax(taxableAmount, false); // 기본 세율로 계산
+    const originalGiftTax = giftTax; // 감면 전 세금 저장
 
-   // 청년 감면 적용
+    // 청년 감면 적용
     let youthReduction = 0;
     if (isYouth) {
        const reducedTax = calculateGiftTax(taxableAmount, true); // 감면 적용된 세율로 계산
