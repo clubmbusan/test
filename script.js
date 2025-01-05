@@ -91,18 +91,32 @@ function calculateGiftTax(taxableAmount) {
     let tax = 0;
     let previousLimit = 0;
 
+    // 청년 증여 여부 확인 (드롭다운 값 읽기)
+    const isYouth = document.getElementById('isYouthDropdown').value === 'yes';
+    const youthRateReduction = 0.1; // 청년 세율 감면 (10%)
+
     for (const bracket of taxBrackets) {
+        // 기본 세율로 계산 (기존 로직 유지)
+        let effectiveRate = bracket.rate;
+
+        // 청년 세율 감면 적용 (청년인 경우 세율 조정)
+        if (isYouth) {
+            effectiveRate = Math.max(0.1, bracket.rate - youthRateReduction); // 최소 세율 10%
+        }
+
         if (taxableAmount > bracket.limit) {
-            tax += (bracket.limit - previousLimit) * bracket.rate;
+            // 현재 구간의 세율(effectiveRate)로 계산
+            tax += (bracket.limit - previousLimit) * effectiveRate;
             previousLimit = bracket.limit;
         } else {
-            tax += (taxableAmount - previousLimit) * bracket.rate;
+            // 마지막 구간 계산
+            tax += (taxableAmount - previousLimit) * effectiveRate;
             tax -= bracket.deduction;
             break;
         }
     }
 
-    return Math.max(tax, 0);
+    return Math.max(tax, 0); // 세금은 음수일 수 없으므로 0 이상으로 반환
 }
 
 // 가산세 계산 로직
