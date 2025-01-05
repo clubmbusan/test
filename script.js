@@ -78,7 +78,7 @@ function getGiftAmount() {
     return giftAmount;
 }
 
-// 누진세 계산 (청년 여부 상관없이 계산)
+// 누진세 계산 함수 (청년 여부 상관없이 계산/디버깅 추가)
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
         { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
@@ -91,28 +91,40 @@ function calculateGiftTax(taxableAmount) {
     let tax = 0;
     let previousLimit = 0;
 
+    console.log("** 누진세 계산 시작 **");
+    console.log(`과세 금액: ${taxableAmount.toLocaleString()} 원`);
+
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
-            tax += (bracket.limit - previousLimit) * bracket.rate;
+            const segmentTax = (bracket.limit - previousLimit) * bracket.rate;
+            tax += segmentTax;
+            console.log(
+                `구간: ${previousLimit.toLocaleString()} ~ ${bracket.limit.toLocaleString()}, 세율: ${
+                    bracket.rate * 100
+                }%, 계산 세금: ${segmentTax.toLocaleString()} 원`
+            );
             previousLimit = bracket.limit;
         } else {
-            tax += (taxableAmount - previousLimit) * bracket.rate;
+            const segmentTax = (taxableAmount - previousLimit) * bracket.rate;
+            tax += segmentTax;
+            console.log(
+                `구간: ${previousLimit.toLocaleString()} ~ ${taxableAmount.toLocaleString()}, 세율: ${
+                    bracket.rate * 100
+                }%, 계산 세금: ${segmentTax.toLocaleString()} 원`
+            );
+            tax -= bracket.deduction; // 누진 공제 적용
+            console.log(`공제 금액: ${bracket.deduction.toLocaleString()} 원`);
             break;
         }
     }
 
-    // 누진 공제 적용
-    for (const bracket of taxBrackets) {
-        if (taxableAmount <= bracket.limit) {
-            tax -= bracket.deduction;
-            break;
-        }
-    }
+    console.log(`최종 계산된 세금: ${Math.max(tax, 0).toLocaleString()} 원`);
+    console.log("** 누진세 계산 종료 **");
 
     return Math.max(tax, 0); // 음수 방지
 }
 
-// 청년 감면 적용 함수
+// 청년 감면 적용 함수 (디버깅 추가)
 function applyYouthReduction(taxableAmount, originalGiftTax) {
     const taxBrackets = [
         { limit: 200000000, rate: 0.1 }, // 2억 이하
@@ -125,20 +137,38 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
     let reducedTax = 0;
     let previousLimit = 0;
 
-    // 청년 감면 세율 적용 계산
+    console.log("** 청년 감면 계산 시작 **");
+    console.log(`과세 금액: ${taxableAmount.toLocaleString()} 원`);
+
     for (const bracket of taxBrackets) {
-        let effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 청년 감면된 세율
+        let effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 감면된 세율
         if (taxableAmount > bracket.limit) {
-            reducedTax += (bracket.limit - previousLimit) * effectiveRate;
+            const segmentTax = (bracket.limit - previousLimit) * effectiveRate;
+            reducedTax += segmentTax;
+            console.log(
+                `구간: ${previousLimit.toLocaleString()} ~ ${bracket.limit.toLocaleString()}, 감면 세율: ${
+                    effectiveRate * 100
+                }%, 계산 세금: ${segmentTax.toLocaleString()} 원`
+            );
             previousLimit = bracket.limit;
         } else {
-            reducedTax += (taxableAmount - previousLimit) * effectiveRate;
+            const segmentTax = (taxableAmount - previousLimit) * effectiveRate;
+            reducedTax += segmentTax;
+            console.log(
+                `구간: ${previousLimit.toLocaleString()} ~ ${taxableAmount.toLocaleString()}, 감면 세율: ${
+                    effectiveRate * 100
+                }%, 계산 세금: ${segmentTax.toLocaleString()} 원`
+            );
             break;
         }
     }
 
-    reducedTax = Math.max(reducedTax, 0); // 음수 방지
-    const youthReduction = Math.max(originalGiftTax - reducedTax, 0); // 감면 금액 계산 (음수 방지)
+    const youthReduction = originalGiftTax - reducedTax;
+    console.log(`감면 전 세금: ${originalGiftTax.toLocaleString()} 원`);
+    console.log(`감면 후 세금: ${reducedTax.toLocaleString()} 원`);
+    console.log(`청년 감면 금액: ${youthReduction.toLocaleString()} 원`);
+    console.log("** 청년 감면 계산 종료 **");
+
     return { reducedTax, youthReduction };
 }
 
