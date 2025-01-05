@@ -52,9 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // 관계별 공제 한도 계산
 function getExemptionAmount(relationship) {
     const exemptions = {
-        'adultChild': 50000000,       // 성년 자녀: 5천만 원
-        'minorChild': 20000000,       // 미성년 자녀: 2천만 원
-        'spouse': 600000000,          // 배우자: 6억 원
+        'adultChild': 100000000,       // 성년 자녀: 1억 원
+        'minorChild': 25000000,       // 미성년 자녀: 2,500만 원
+        'spouse': 700000000,          // 배우자: 7억 원
         'sonInLawDaughterInLaw': 50000000, // 사위/며느리: 5천만 원
         'other': 10000000             // 타인: 1천만 원
     };
@@ -81,11 +81,11 @@ function getGiftAmount() {
 // 누진세 계산
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 100000000, rate: 0.1, deduction: 0 },
-        { limit: 500000000, rate: 0.2, deduction: 10000000 },
-        { limit: 1000000000, rate: 0.3, deduction: 60000000 },
-        { limit: 3000000000, rate: 0.4, deduction: 160000000 },
-        { limit: Infinity, rate: 0.5, deduction: 460000000 }
+        { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
+        { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
+        { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
+        { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
+        { limit: Infinity, rate: 0.45, deduction: 370000000 } // 20억 초과
     ];
 
     let tax = 0;
@@ -96,10 +96,10 @@ function calculateGiftTax(taxableAmount) {
     const youthRateReduction = 0.1; // 청년 세율 감면 (10%)
 
     for (const bracket of taxBrackets) {
-        // 기본 세율로 계산 (기존 로직 유지)
+        // 기본 세율로 계산
         let effectiveRate = bracket.rate;
 
-        // 청년 세율 감면 적용 (청년인 경우 세율 조정)
+        // 청년 세율 감면 적용
         if (isYouth) {
             effectiveRate = Math.max(0.1, bracket.rate - youthRateReduction); // 최소 세율 10%
         }
