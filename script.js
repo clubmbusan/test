@@ -79,7 +79,7 @@ function getGiftAmount() {
 }
 
 // 누진세 계산
-function calculateGiftTax(taxableAmount) {
+function calculateGiftTax(taxableAmount, isYouth = false) {
     const taxBrackets = [
         { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
         { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
@@ -91,12 +91,9 @@ function calculateGiftTax(taxableAmount) {
     let tax = 0;
     let previousLimit = 0;
 
-    // 청년 증여 여부 확인 (드롭다운 값 읽기)
-    const isYouth = document.getElementById('isYouthDropdown').value === 'yes';
-    const youthRateReduction = 0.1; // 청년 세율 감면 (10%)
+    const youthRateReduction = 0.1; // 청년 감면율 (10%)
 
     for (const bracket of taxBrackets) {
-        // 기본 세율로 계산
         let effectiveRate = bracket.rate;
 
         // 청년 세율 감면 적용
@@ -105,13 +102,11 @@ function calculateGiftTax(taxableAmount) {
         }
 
         if (taxableAmount > bracket.limit) {
-            // 현재 구간의 세율(effectiveRate)로 계산
             tax += (bracket.limit - previousLimit) * effectiveRate;
             previousLimit = bracket.limit;
         } else {
-            // 마지막 구간 계산
             tax += (taxableAmount - previousLimit) * effectiveRate;
-            tax -= bracket.deduction;
+            tax -= bracket.deduction; // 해당 구간의 공제 적용
             break;
         }
     }
