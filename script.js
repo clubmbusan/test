@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-   // 전역 변수 선언
+   // 전역 변수 선언    
 let totalGiftAmount = 0; // 총 증여 금액
 let fatherGiftAmount = 0; // 부 증여 금액
 let motherGiftAmount = 0; // 모 증여 금액
@@ -229,47 +229,36 @@ document.addEventListener('DOMContentLoaded', function () {
     fatherAmountInput.addEventListener('input', updateRemainingAmount);
     motherAmountInput.addEventListener('input', updateRemainingAmount);
 
-   // 저장 버튼 클릭 (모달에서 입력값을 저장)
-saveMarriageGiftButton.addEventListener('click', function () {
-    const fatherAmount = parseCurrency(fatherAmountInput.value || '0');
-    const motherAmount = parseCurrency(motherAmountInput.value || '0');
+    // 저장 버튼 클릭 (모달에서 입력값을 저장)
+    saveMarriageGiftButton.addEventListener('click', function () {
+        const fatherAmount = parseCurrency(fatherAmountInput.value || '0');
+        const motherAmount = parseCurrency(motherAmountInput.value || '0');
 
-    // 결혼 공제 계산 (부와 모 각각의 최대 공제 한도)
-    const maxFatherExemption = 150000000; // 부 최대 공제 한도: 1억 5천만 원
-    const maxMotherExemption = 100000000; // 모 최대 공제 한도: 1억 원
+        // 결혼 공제 계산 (부모 합산 최대 공제 한도)
+        const marriageExemption = calculateMarriageExemption(fatherAmount, motherAmount);
 
-    // 각각의 결혼 공제 금액 계산
-    const fatherExemption = Math.min(fatherAmount, maxFatherExemption);
-    const motherExemption = Math.min(motherAmount, maxMotherExemption);
-
-    // 결혼 공제 값 저장
-    fatherGiftAmount = fatherExemption;
-    motherGiftAmount = motherExemption;
-
-    // 사용자에게 결과 알림
-    alert(`결혼 공제 저장됨\n부: ${fatherGiftAmount.toLocaleString()} 원\n모: ${motherGiftAmount.toLocaleString()} 원`);
-    marriageGiftModal.style.display = 'none';
-});
+        // 사용자에게 결과 알림
+        alert(`결혼 공제 저장됨\n총 결혼 공제: ${marriageExemption.toLocaleString()} 원`);
+        marriageGiftModal.style.display = 'none';
+    });
 
     // 닫기 버튼 클릭 이벤트
-closeMarriageGiftModal.addEventListener('click', function () {
-    marriageGiftModal.style.display = 'none';
+    closeMarriageGiftModal.addEventListener('click', function () {
+        marriageGiftModal.style.display = 'none';
+    });
 });
 
 // 결혼 공제 계산 함수
 function calculateMarriageExemption(fatherAmount, motherAmount) {
-    const maxFatherExemption = 100000000; // 부 최대 공제 한도: 1억 원
-    const maxMotherExemption = 100000000; // 모 최대 공제 한도: 1억 원
-    const totalMarriageExemptionLimit = 200000000; // 결혼 공제 총 한도: 2억 원
+    const maxMarriageExemption = 100000000; // 부모 합산 최대 공제 한도: 1억 원
 
-    // 각각 부모의 공제 한도 계산
-    const fatherExemption = Math.min(fatherAmount, maxFatherExemption);
-    const motherExemption = Math.min(motherAmount, maxMotherExemption);
+    // 부모 각각의 공제 합산 계산
+    const totalGiftAmountFromParents = fatherAmount + motherAmount;
 
-    // 결혼 공제 총합이 2억 원을 초과하지 않도록 제한
-    const totalMarriageExemption = Math.min(fatherExemption + motherExemption, totalMarriageExemptionLimit);
+    // 합산 공제가 최대 1억 원을 초과하지 않도록 제한
+    const totalMarriageExemption = Math.min(totalGiftAmountFromParents, maxMarriageExemption);
 
-    return totalMarriageExemption;
+    return totalMarriageExemption; // 최종 결혼 공제 금액 반환
 }
 
 // 최종 공제 계산 함수
