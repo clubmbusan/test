@@ -112,14 +112,17 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
         { limit: 500000000, rate: 0.2 }, // 2억 초과 ~ 5억 이하
         { limit: 1000000000, rate: 0.3 }, // 5억 초과 ~ 10억 이하
         { limit: 2000000000, rate: 0.4 }, // 10억 초과 ~ 20억 이하
-        { limit: Infinity, rate: 0.45 } // 20억 초과
+        { limit: Infinity, rate: 0.45 }  // 20억 초과
     ];
 
-    let reducedTax = 0;
+    let reducedTax = 0; // 감면 후 세금
     let previousLimit = 0;
 
     for (const bracket of taxBrackets) {
-        let effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 청년 감면 적용된 세율
+        // 감면 세율 계산
+        let effectiveRate = bracket.rate - 0.1; // 청년 감면율 10%
+        effectiveRate = Math.max(0.1, effectiveRate); // 최소 세율은 10%
+
         if (taxableAmount > bracket.limit) {
             reducedTax += (bracket.limit - previousLimit) * effectiveRate;
             previousLimit = bracket.limit;
@@ -130,7 +133,8 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
     }
 
     reducedTax = Math.max(reducedTax, 0); // 음수 방지
-    const youthReduction = originalGiftTax - reducedTax;
+    const youthReduction = originalGiftTax - reducedTax; // 감면 금액 계산
+
     return { reducedTax, youthReduction };
 }
 
