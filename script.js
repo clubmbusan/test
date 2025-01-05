@@ -1,4 +1,4 @@
-/ 유틸리티 함수: 콤마 제거 후 숫자로 변환
+// 유틸리티 함수: 콤마 제거 후 숫자로 변환
 function parseCurrency(value) {
     return parseInt(value.replace(/[^0-9]/g, ''), 10) || 0;
 }
