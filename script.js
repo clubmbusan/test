@@ -181,13 +181,14 @@ document.addEventListener('DOMContentLoaded', function () {
         container.appendChild(newGiftEntry);
     });
 });
-   
+          
        // 전역 변수 선언
 let totalGiftAmount = 0; // 총 증여 금액
 let fatherGiftAmount = 0; // 부 증여 금액
 let motherGiftAmount = 0; // 모 증여 금액
 
 // DOMContentLoaded 이벤트
+// *** 결혼증여 모달 로직 ***
 document.addEventListener('DOMContentLoaded', function () {
     const marriageGiftButton = document.getElementById('marriageGiftButton');
     const marriageGiftModal = document.getElementById('marriageGiftModal');
@@ -337,6 +338,8 @@ document.getElementById('donationTaxButton').addEventListener('click', function 
 });
 
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
+
+
 });
 
                           
