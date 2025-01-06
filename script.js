@@ -80,7 +80,6 @@ function getGiftAmount() {
 
 // 누진세 계산 함수 (청년 여부 상관없이 계산)
 function calculateGiftTax(taxableAmount) {
-    console.log('calculateGiftTax 호출됨, 과세 금액:', taxableAmount);
     const taxBrackets = [
         { limit: 200000000, rate: 0.1, deduction: 0 },        // 2억 이하
         { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
@@ -90,22 +89,22 @@ function calculateGiftTax(taxableAmount) {
     ];
 
     let tax = 0;
+    let previousLimit = 0;
 
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
-            // 현재 구간의 최대치를 계산
-            tax += (bracket.limit - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
+            tax += (bracket.limit - previousLimit) * bracket.rate;
+            previousLimit = bracket.limit;
         } else {
-            // 현재 구간 내에서 남은 금액 계산
-            tax += (taxableAmount - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
+            tax += (taxableAmount - previousLimit) * bracket.rate;
             tax -= bracket.deduction; // 누진 공제 적용
             break;
         }
     }
 
-    console.log('누진세 계산 결과:', tax);
     return Math.max(tax, 0); // 음수 방지
 }
+
 
 // 청년 감면 적용 (누진 공제 반영)
 function applyYouthReduction(taxableAmount, originalGiftTax) {
@@ -301,6 +300,7 @@ function calculateExemptions(totalGiftAmount, relationship) {
 }
 
 // 최종 세금 계산 함수
+// 최종 세금 계산 함수
 function calculateFinalTax() {
     const totalGiftAmount = getGiftAmount(); // 총 증여 금액
     const relationship = document.getElementById('relationship').value;
@@ -320,8 +320,9 @@ function calculateFinalTax() {
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(taxableAmount, originalGiftTax);
-        youthReduction = reductionAmount;
+        // 청년 감면 로직 적용
+        const reducedTax = calculateGiftTax(taxableAmount * 0.9); // 감면율 10% 적용
+        youthReduction = originalGiftTax - reducedTax;
         finalGiftTax = reducedTax;
     }
 
