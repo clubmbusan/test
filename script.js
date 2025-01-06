@@ -78,63 +78,55 @@ function getGiftAmount() {
     return giftAmount;
 }
 
-// 누진세 계산 함수 (청년 여부 상관없이 계산)
+// 1. 일반 누진세 계산 함수
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
+        { limit: 200000000, rate: 0.1, deduction: 0 },        // 2억 이하
         { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
         { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
         { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
-        { limit: Infinity, rate: 0.45, deduction: 370000000 } // 20억 초과
+        { limit: Infinity, rate: 0.45, deduction: 370000000 }  // 20억 초과
     ];
 
     let tax = 0;
-    let previousLimit = 0;
-
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
-            tax += (bracket.limit - previousLimit) * bracket.rate;
-            previousLimit = bracket.limit;
+            tax += (bracket.limit - (bracket.previousLimit || 0)) * bracket.rate;
         } else {
-            tax += (taxableAmount - previousLimit) * bracket.rate;
+            tax += (taxableAmount - (bracket.previousLimit || 0)) * bracket.rate;
             tax -= bracket.deduction; // 누진 공제 적용
             break;
         }
+        bracket.previousLimit = bracket.limit;
     }
 
     return Math.max(tax, 0); // 음수 방지
 }
 
-// 청년 감면 적용 (중복 누진 공제 방지)
-function applyYouthReduction(taxableAmount, originalGiftTax) {
+// 2. 청년 감면 적용된 누진세 계산 함수
+function calculateYouthGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
-        { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
-        { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
-        { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
-        { limit: Infinity, rate: 0.45, deduction: 370000000 } // 20억 초과
+        { limit: 200000000, rate: 0.1, deduction: 0 },        // 2억 이하
+        { limit: 500000000, rate: 0.1, deduction: 20000000 }, // 2억 초과 ~ 5억 이하 (감면: 20%)
+        { limit: 1000000000, rate: 0.2, deduction: 70000000 }, // 5억 초과 ~ 10억 이하 (감면: 30%)
+        { limit: 2000000000, rate: 0.3, deduction: 170000000 }, // 10억 초과 ~ 20억 이하 (감면: 40%)
+        { limit: Infinity, rate: 0.35, deduction: 370000000 }  // 20억 초과 (감면: 45%)
     ];
 
-    let reducedTax = 0;
-    let previousLimit = 0;
-
+    let tax = 0;
     for (const bracket of taxBrackets) {
-        let effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 청년 감면 적용된 세율
         if (taxableAmount > bracket.limit) {
-            reducedTax += (bracket.limit - previousLimit) * effectiveRate;
-            previousLimit = bracket.limit;
+            tax += (bracket.limit - (bracket.previousLimit || 0)) * bracket.rate;
         } else {
-            reducedTax += (taxableAmount - previousLimit) * effectiveRate;
-            reducedTax -= bracket.deduction; // 누진 공제 반영
+            tax += (taxableAmount - (bracket.previousLimit || 0)) * bracket.rate;
+            tax -= bracket.deduction; // 누진 공제 적용
             break;
         }
+        bracket.previousLimit = bracket.limit;
     }
 
-    reducedTax = Math.max(reducedTax, 0); // 음수 방지
-    const youthReduction = Math.max(originalGiftTax - reducedTax, 0); // 감면 금액 계산 (음수 방지)
-    return { reducedTax, youthReduction };
+    return Math.max(tax, 0); // 음수 방지
 }
-
 
 // 가산세 계산 로직
 function calculateLatePenalty(submissionDate, giftDate, giftTax) {
