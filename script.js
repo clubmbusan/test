@@ -80,6 +80,7 @@ function getGiftAmount() {
 
 // 누진세 계산 함수 (청년 여부 상관없이 계산)
 function calculateGiftTax(taxableAmount) {
+    console.log('calculateGiftTax 호출됨, 과세 금액:', taxableAmount);
     const taxBrackets = [
         { limit: 200000000, rate: 0.1, deduction: 0 },        // 2억 이하
         { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
@@ -102,6 +103,7 @@ function calculateGiftTax(taxableAmount) {
         }
     }
 
+    console.log('누진세 계산 결과:', tax);
     return Math.max(tax, 0); // 음수 방지
 }
 
