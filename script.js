@@ -89,23 +89,25 @@ function calculateGiftTax(taxableAmount) {
     ];
 
     let tax = 0;
+    let previousLimit = 0;
+
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
-            tax += (bracket.limit - (bracket.previousLimit || 0)) * bracket.rate;
+            tax += (bracket.limit - previousLimit) * bracket.rate;
+            previousLimit = bracket.limit;
         } else {
-            tax += (taxableAmount - (bracket.previousLimit || 0)) * bracket.rate;
-            tax -= bracket.deduction; // 누진 공제 적용
+            tax += (taxableAmount - previousLimit) * bracket.rate;
+            tax -= bracket.deduction; // 누진 공제는 마지막에 적용
             break;
         }
-        bracket.previousLimit = bracket.limit;
     }
 
     return Math.max(tax, 0); // 음수 방지
 }
 
 // 2. 청년 감면 적용된 누진세 계산 함수
-function calculateYouthGiftTax(taxableAmount) {
-    const youthTaxBrackets = [
+function applyYouthReduction(taxableAmount, originalGiftTax) {
+    const taxBrackets = [
         { limit: 200000000, rate: 0.1, deduction: 0 },         // 2억 이하
         { limit: 500000000, rate: 0.1, deduction: 20000000 },  // 2억 초과 ~ 5억 이하
         { limit: 1000000000, rate: 0.2, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
@@ -113,19 +115,27 @@ function calculateYouthGiftTax(taxableAmount) {
         { limit: Infinity, rate: 0.4, deduction: 370000000 }   // 20억 초과
     ];
 
-    let tax = 0;
-    for (const bracket of youthTaxBrackets) {
+    let reducedTax = 0;
+    let previousLimit = 0;
+
+    for (const bracket of taxBrackets) {
+        let effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 감면된 세율 적용
         if (taxableAmount > bracket.limit) {
-            tax += (bracket.limit - (bracket.previousLimit || 0)) * bracket.rate;
+            const segmentTax = (bracket.limit - previousLimit) * effectiveRate;
+            reducedTax += segmentTax;
+            previousLimit = bracket.limit;
         } else {
-            tax += (taxableAmount - (bracket.previousLimit || 0)) * bracket.rate;
-            tax -= bracket.deduction; // 누진 공제 적용
+            const segmentTax = (taxableAmount - previousLimit) * effectiveRate;
+            reducedTax += segmentTax;
+            reducedTax -= bracket.deduction; // 누진 공제 반영
             break;
         }
-        bracket.previousLimit = bracket.limit;
     }
 
-    return Math.max(tax, 0); // 음수 방지
+    reducedTax = Math.max(reducedTax, 0); // 음수 방지
+    const youthReduction = Math.min(originalGiftTax - reducedTax, 90000000); // 최대 9천만 원 제한
+
+    return { reducedTax, youthReduction };
 }
 
 // 가산세 계산 로직
@@ -306,12 +316,9 @@ function calculateFinalTax() {
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        // 감면 후 증여세 계산 (청년 감면 세율 적용)
-        const youthTax = calculateYouthGiftTax(taxableAmount);
-        // 감면 금액 계산: 감면 전 증여세 - 감면 후 증여세
-        youthReduction = Math.min(originalGiftTax - youthTax, 90000000); // 최대 9천만 원 제한
-        // 최종 증여세: 감면 전 증여세 - 감면 금액
-        finalGiftTax = originalGiftTax - youthReduction;
+        const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(taxableAmount, originalGiftTax);
+        youthReduction = reductionAmount;
+        finalGiftTax = reducedTax;
     }
 
     // 가산세 계산
