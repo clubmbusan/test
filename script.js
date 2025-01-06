@@ -78,14 +78,14 @@ function getGiftAmount() {
     return giftAmount;
 }
 
-// 누진세 계산 함수 (청년 여부 상관없이 계산)
+// 누진세 계산 함수 (청년 여부와 무관하게 과세 금액에 따라 계산)
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 200000000, rate: 0.1, deduction: 0 },
-        { limit: 500000000, rate: 0.2, deduction: 20000000 },
-        { limit: 1000000000, rate: 0.3, deduction: 70000000 },
-        { limit: 2000000000, rate: 0.4, deduction: 170000000 },
-        { limit: Infinity, rate: 0.45, deduction: 370000000 }
+        { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
+        { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
+        { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
+        { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
+        { limit: Infinity, rate: 0.45, deduction: 370000000 } // 20억 초과
     ];
 
     let tax = 0;
@@ -93,22 +93,24 @@ function calculateGiftTax(taxableAmount) {
 
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
+            // 이전 구간까지의 세금을 누적 계산
             tax += (bracket.limit - previousLimit) * bracket.rate;
             previousLimit = bracket.limit;
         } else {
+            // 현재 구간에서 과세 금액까지 계산
             tax += (taxableAmount - previousLimit) * bracket.rate;
-            tax -= bracket.deduction;
+            tax -= bracket.deduction; // 누진 공제 적용
             break;
         }
     }
 
-    return Math.max(tax, 0);
+    return Math.max(tax, 0); // 음수 방지
 }
 
 // 청년 감면 적용 함수
 function applyYouthReduction(originalGiftTax) {
-    const maxYouthReduction = 100000000; // 최대 감면 한도
-    const youthReduction = Math.min(originalGiftTax * 0.1, maxYouthReduction);
+    const maxYouthReduction = 100000000; // 최대 감면 한도 (1억 원)
+    const youthReduction = Math.min(originalGiftTax * 0.1, maxYouthReduction); // 10% 감면 적용
     return { reducedTax: originalGiftTax - youthReduction, youthReduction };
 }
 
