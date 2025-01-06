@@ -303,30 +303,47 @@ function calculateFinalTax() {
     const totalGiftAmount = getGiftAmount(); // 총 증여 금액
     const relationship = document.getElementById('relationship').value;
 
+    console.log("** 최종 세금 계산 시작 **");
+    console.log(`총 증여 금액: ${totalGiftAmount.toLocaleString()} 원`);
+
     // 공제 계산
     const { relationshipExemption, marriageExemption, totalExemption } = calculateExemptions(totalGiftAmount, relationship);
 
+    console.log(`관계 공제: ${relationshipExemption.toLocaleString()} 원`);
+    console.log(`결혼 공제: ${marriageExemption.toLocaleString()} 원`);
+    console.log(`총 공제 금액: ${totalExemption.toLocaleString()} 원`);
+
     // 과세 금액 계산
     const taxableAmount = Math.max(0, totalGiftAmount - totalExemption);
+    console.log(`과세 금액: ${taxableAmount.toLocaleString()} 원`);
 
     // 증여세 (감면 전)
     const originalGiftTax = calculateGiftTax(taxableAmount);
+    console.log(`증여세 (감면 전): ${originalGiftTax.toLocaleString()} 원`);
 
     // 청년 감면 여부 확인
     const isYouth = document.getElementById('isYouthDropdown').value === 'yes';
+    console.log(`청년 여부: ${isYouth ? "청년 (만 20~29세)" : "청년 아님"}`);
+    
     let youthReduction = 0;
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
+        console.log("** 청년 감면 계산 시작 **");
         const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(taxableAmount, originalGiftTax);
         youthReduction = reductionAmount;
         finalGiftTax = reducedTax;
+        console.log(`청년 감면 금액: ${youthReduction.toLocaleString()} 원`);
+        console.log(`감면 후 증여세: ${finalGiftTax.toLocaleString()} 원`);
+        console.log("** 청년 감면 계산 종료 **");
     }
 
     // 가산세 계산
     const giftDate = document.getElementById('giftDate').value;
     const submissionDate = document.getElementById('submissionDate').value;
     const { penalty, message } = calculateLatePenalty(submissionDate, giftDate, finalGiftTax);
+
+    console.log(`가산세: ${penalty.toLocaleString()} 원 (${message})`);
 
     // 최종 세금 합산
     const totalTax = finalGiftTax + penalty;
@@ -345,7 +362,10 @@ function calculateFinalTax() {
         <p>가산세: ${penalty.toLocaleString()} 원 (${message})</p>
         <p><strong>최종 납부세액: ${(totalTax).toLocaleString()} 원</strong></p>
     `;
+
+    console.log("** 최종 세금 계산 종료 **");
 }
+
 
 // 증여세 신고 버튼 이벤트
 document.getElementById('donationTaxButton').addEventListener('click', function () {
