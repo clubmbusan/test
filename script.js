@@ -89,19 +89,22 @@ function calculateGiftTax(taxableAmount) {
     ];
 
     let tax = 0;
+    let previousLimit = 0;
 
     console.log(`과세 금액: ${taxableAmount}`);
 
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
-            const segmentTax = (bracket.limit - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
+            const segmentTax = (bracket.limit - previousLimit) * bracket.rate;
             tax += segmentTax;
             console.log(`구간: ${bracket.limit}, 세율: ${bracket.rate}, 세금 추가: ${segmentTax}, 누적 세금: ${tax}`);
+            previousLimit = bracket.limit;
         } else {
-            const segmentTax = (taxableAmount - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
+            const segmentTax = (taxableAmount - previousLimit) * bracket.rate;
             tax += segmentTax;
+            console.log(`최종 구간: ${taxableAmount}, 세율: ${bracket.rate}, 세금 추가: ${segmentTax}`);
             tax -= bracket.deduction; // 누진 공제 적용
-            console.log(`최종 구간: ${taxableAmount}, 세율: ${bracket.rate}, 세금 추가: ${segmentTax}, 누진 공제: ${bracket.deduction}, 총 세금: ${tax}`);
+            console.log(`누진 공제: ${bracket.deduction}, 최종 세금: ${tax}`);
             break;
         }
     }
@@ -127,24 +130,23 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
     console.log(`청년 감면 적용 과세 금액: ${taxableAmount}, 원래 세금: ${originalGiftTax}`);
 
     for (const bracket of taxBrackets) {
-        // 감면된 세율 적용
         const effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 감면된 세율
         if (taxableAmount > bracket.limit) {
             const segmentTax = (bracket.limit - previousLimit) * effectiveRate;
             reducedTax += segmentTax;
-            console.log(`구간: ${bracket.limit}, 감면 세율: ${effectiveRate}, 감면된 세금 추가: ${segmentTax}, 누적 감면된 세금: ${reducedTax}`);
+            console.log(`구간: ${bracket.limit}, 감면 세율: ${effectiveRate}, 세금 추가: ${segmentTax}, 누적 세금: ${reducedTax}`);
             previousLimit = bracket.limit;
         } else {
             const segmentTax = (taxableAmount - previousLimit) * effectiveRate;
             reducedTax += segmentTax;
-            reducedTax -= bracket.deduction; // 누진 공제 반영
-            console.log(`최종 구간: ${taxableAmount}, 감면 세율: ${effectiveRate}, 감면된 세금 추가: ${segmentTax}, 누진 공제: ${bracket.deduction}, 총 감면된 세금: ${reducedTax}`);
+            reducedTax -= bracket.deduction; // 누진 공제 적용
+            console.log(`최종 구간: ${taxableAmount}, 감면 세율: ${effectiveRate}, 세금 추가: ${segmentTax}, 누진 공제: ${bracket.deduction}, 총 세금: ${reducedTax}`);
             break;
         }
     }
 
     reducedTax = Math.max(reducedTax, 0); // 음수 방지
-    const youthReduction = originalGiftTax - reducedTax;
+    const youthReduction = Math.max(0, originalGiftTax - reducedTax);
 
     console.log(`최종 감면된 세금: ${reducedTax}, 청년 감면 금액: ${youthReduction}`);
     return { reducedTax, youthReduction };
