@@ -81,8 +81,8 @@ function getGiftAmount() {
 // 1. 일반 누진세 계산 함수
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 200000000, rate: 0.1, deduction: 0 },        // 2억 이하
-        { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
+        { limit: 200000000, rate: 0.1, deduction: 0 },         // 2억 이하
+        { limit: 500000000, rate: 0.2, deduction: 20000000 },  // 2억 초과 ~ 5억 이하
         { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
         { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
         { limit: Infinity, rate: 0.45, deduction: 370000000 }  // 20억 초과
@@ -105,16 +105,16 @@ function calculateGiftTax(taxableAmount) {
 
 // 2. 청년 감면 적용된 누진세 계산 함수
 function calculateYouthGiftTax(taxableAmount) {
-    const taxBrackets = [
-        { limit: 200000000, rate: 0.1, deduction: 0 },        // 2억 이하
-        { limit: 500000000, rate: 0.1, deduction: 20000000 }, // 2억 초과 ~ 5억 이하 (감면: 20%)
-        { limit: 1000000000, rate: 0.2, deduction: 70000000 }, // 5억 초과 ~ 10억 이하 (감면: 30%)
-        { limit: 2000000000, rate: 0.3, deduction: 170000000 }, // 10억 초과 ~ 20억 이하 (감면: 40%)
-        { limit: Infinity, rate: 0.35, deduction: 370000000 }  // 20억 초과 (감면: 45%)
+    const youthTaxBrackets = [
+        { limit: 200000000, rate: 0.1, deduction: 0 },         // 2억 이하
+        { limit: 500000000, rate: 0.1, deduction: 20000000 },  // 2억 초과 ~ 5억 이하
+        { limit: 1000000000, rate: 0.2, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
+        { limit: 2000000000, rate: 0.3, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
+        { limit: Infinity, rate: 0.4, deduction: 370000000 }   // 20억 초과
     ];
 
     let tax = 0;
-    for (const bracket of taxBrackets) {
+    for (const bracket of youthTaxBrackets) {
         if (taxableAmount > bracket.limit) {
             tax += (bracket.limit - (bracket.previousLimit || 0)) * bracket.rate;
         } else {
@@ -306,10 +306,12 @@ function calculateFinalTax() {
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        // 청년 감면 로직 적용
+        // 감면 후 증여세 계산 (청년 감면 세율 적용)
         const youthTax = calculateYouthGiftTax(taxableAmount);
-        youthReduction = originalGiftTax - youthTax; // 감면액 계산
-        finalGiftTax = youthTax;
+        // 감면 금액 계산: 감면 전 증여세 - 감면 후 증여세
+        youthReduction = Math.min(originalGiftTax - youthTax, 90000000); // 최대 9천만 원 제한
+        // 최종 증여세: 감면 전 증여세 - 감면 금액
+        finalGiftTax = originalGiftTax - youthReduction;
     }
 
     // 가산세 계산
