@@ -81,11 +81,11 @@ function getGiftAmount() {
 // 누진세 계산 함수 (청년 여부 상관없이 계산)
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 200000000, rate: 0.1, deduction: 0 }, // 2억 이하
-        { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
-        { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
-        { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
-        { limit: Infinity, rate: 0.45, deduction: 370000000 } // 20억 초과
+        { limit: 200000000, rate: 0.1, deduction: 0 },
+        { limit: 500000000, rate: 0.2, deduction: 20000000 },
+        { limit: 1000000000, rate: 0.3, deduction: 70000000 },
+        { limit: 2000000000, rate: 0.4, deduction: 170000000 },
+        { limit: Infinity, rate: 0.45, deduction: 370000000 }
     ];
 
     let tax = 0;
@@ -97,19 +97,18 @@ function calculateGiftTax(taxableAmount) {
             previousLimit = bracket.limit;
         } else {
             tax += (taxableAmount - previousLimit) * bracket.rate;
-            tax -= bracket.deduction; // 누진 공제 적용
+            tax -= bracket.deduction;
             break;
         }
     }
 
-    return Math.max(tax, 0); // 음수 방지
+    return Math.max(tax, 0);
 }
 
-// 청년 감면 적용
-function applyYouthReduction(taxableAmount, originalGiftTax) {
-    const maxYouthReduction = 100000000; // 최대 감면 한도 (1억 원)
-    const reductionRate = 0.1; // 감면율
-    const youthReduction = Math.min(originalGiftTax * reductionRate, maxYouthReduction);
+// 청년 감면 적용 함수
+function applyYouthReduction(originalGiftTax) {
+    const maxYouthReduction = 100000000; // 최대 감면 한도
+    const youthReduction = Math.min(originalGiftTax * 0.1, maxYouthReduction);
     return { reducedTax: originalGiftTax - youthReduction, youthReduction };
 }
 
@@ -273,12 +272,10 @@ function calculateExemptions(totalGiftAmount, relationship) {
 
 // 최종 세금 계산 함수
 function calculateFinalTax() {
-    // 총 증여 금액 가져오기
-    const totalGiftAmount = getGiftAmount(); // 예: 현금 금액 입력 필드에서 가져오기
-    const relationship = document.getElementById('relationship').value; // 관계 선택
-    const isYouth = document.getElementById('isYouthDropdown').value === 'yes'; // 청년 여부 확인
+    const totalGiftAmount = getGiftAmount(); // 총 증여 금액
+    const relationship = document.getElementById('relationship').value;
 
-    // 공제 계산: 관계 공제와 결혼 공제 계산 포함
+    // 공제 계산
     const { relationshipExemption, marriageExemption, totalExemption } = calculateExemptions(totalGiftAmount, relationship);
 
     // 과세 금액 계산
@@ -287,12 +284,13 @@ function calculateFinalTax() {
     // 증여세 (감면 전)
     const originalGiftTax = calculateGiftTax(taxableAmount);
 
-    // 청년 감면 계산
-    let youthReduction = 0; // 청년 감면액 초기화
+    // 청년 감면 여부 확인
+    const isYouth = document.getElementById('isYouthDropdown').value === 'yes';
+    let youthReduction = 0;
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(taxableAmount, originalGiftTax);
+        const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(originalGiftTax);
         youthReduction = reductionAmount;
         finalGiftTax = reducedTax;
     }
