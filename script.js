@@ -306,9 +306,10 @@ function calculateFinalTax() {
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(taxableAmount, originalGiftTax);
-        youthReduction = reductionAmount;
-        finalGiftTax = reducedTax;
+        // 청년 감면 로직 적용
+        const youthTax = calculateYouthGiftTax(taxableAmount);
+        youthReduction = originalGiftTax - youthTax; // 감면액 계산
+        finalGiftTax = youthTax;
     }
 
     // 가산세 계산
