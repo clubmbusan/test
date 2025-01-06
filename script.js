@@ -107,7 +107,7 @@ function calculateGiftTax(taxableAmount) {
 
 // 2. 청년 감면 적용된 누진세 계산 함수
 function applyYouthReduction(taxableAmount, originalGiftTax) {
-    const taxBrackets = [
+    const youthTaxBrackets = [
         { limit: 200000000, rate: 0.1, deduction: 0 },         // 2억 이하
         { limit: 500000000, rate: 0.1, deduction: 20000000 },  // 2억 초과 ~ 5억 이하
         { limit: 1000000000, rate: 0.2, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
@@ -118,15 +118,13 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
     let reducedTax = 0;
     let previousLimit = 0;
 
-    for (const bracket of taxBrackets) {
+    for (const bracket of youthTaxBrackets) {
         let effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 감면된 세율 적용
         if (taxableAmount > bracket.limit) {
-            const segmentTax = (bracket.limit - previousLimit) * effectiveRate;
-            reducedTax += segmentTax;
+            reducedTax += (bracket.limit - previousLimit) * effectiveRate;
             previousLimit = bracket.limit;
         } else {
-            const segmentTax = (taxableAmount - previousLimit) * effectiveRate;
-            reducedTax += segmentTax;
+            reducedTax += (taxableAmount - previousLimit) * effectiveRate;
             reducedTax -= bracket.deduction; // 누진 공제 반영
             break;
         }
@@ -311,6 +309,11 @@ function calculateFinalTax() {
     const originalGiftTax = calculateGiftTax(taxableAmount);
 
     // 청년 감면 여부 확인
+    console.log(`총 증여 금액: ${totalGiftAmount}`);
+    console.log(`과세 금액: ${taxableAmount}`);
+    console.log(`감면 전 증여세: ${originalGiftTax}`);
+
+    // 청년 감면 여부 확인
     const isYouth = document.getElementById('isYouthDropdown').value === 'yes';
     let youthReduction = 0;
     let finalGiftTax = originalGiftTax;
@@ -319,8 +322,13 @@ function calculateFinalTax() {
         const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(taxableAmount, originalGiftTax);
         youthReduction = reductionAmount;
         finalGiftTax = reducedTax;
-    }
 
+        // 디버깅: 감면 후 값 확인
+        console.log(`청년 감면 전 증여세: ${originalGiftTax}`);
+        console.log(`감면 후 증여세: ${reducedTax}`);
+        console.log(`감면 금액: ${reductionAmount}`);
+    }
+    
     // 가산세 계산
     const giftDate = document.getElementById('giftDate').value;
     const submissionDate = document.getElementById('submissionDate').value;
