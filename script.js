@@ -295,11 +295,9 @@ function calculateExemptions(totalGiftAmount, relationship) {
     // 3. 총 공제 합산 (증여 금액 초과 방지)
     const totalExemption = Math.min(totalGiftAmount, relationshipExemption + marriageExemption);
 
-    // 4. 디버깅 메시지 추가 (선택 사항)
-    console.log(`총 증여 금액: ${totalGiftAmount}, 관계 공제: ${relationshipExemption}, 결혼 공제: ${marriageExemption}, 총 공제: ${totalExemption}`);
-
     return { relationshipExemption, marriageExemption, totalExemption };
 }
+
 
 // 최종 세금 계산 함수
 function calculateFinalTax() {
@@ -321,7 +319,7 @@ function calculateFinalTax() {
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        const reducedTax = calculateGiftTax(taxableAmount * 0.9); // 청년 감면 세율 적용 (10% 할인)
+        const reducedTax = calculateGiftTax(taxableAmount * 0.9); // 감면율 10% 적용
         youthReduction = originalGiftTax - reducedTax;
         finalGiftTax = reducedTax;
     }
