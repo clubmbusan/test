@@ -89,14 +89,12 @@ function calculateGiftTax(taxableAmount) {
     ];
 
     let tax = 0;
-    let previousLimit = 0;
 
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
-            tax += (bracket.limit - previousLimit) * bracket.rate;
-            previousLimit = bracket.limit;
+            tax += (bracket.limit - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
         } else {
-            tax += (taxableAmount - previousLimit) * bracket.rate;
+            tax += (taxableAmount - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
             tax -= bracket.deduction; // 누진 공제 적용
             break;
         }
@@ -319,12 +317,13 @@ function calculateFinalTax() {
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        const reducedTax = calculateGiftTax(taxableAmount * 0.9); // 감면율 10% 적용
+        // 감면율 적용 (10% 감소)
+        const reducedTax = calculateGiftTax(taxableAmount * 0.9);
         youthReduction = originalGiftTax - reducedTax;
         finalGiftTax = reducedTax;
     }
 
-    // 음수 방지 (청년 감면이 과도하게 적용되는 경우 방지)
+    // 음수 방지 (청년 감면이 과도하게 적용되는 경우)
     youthReduction = Math.max(youthReduction, 0);
 
     // 가산세 계산
