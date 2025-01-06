@@ -115,6 +115,7 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
         { limit: Infinity, rate: 0.45, deduction: 370000000 } // 20억 초과
     ];
 
+    const maxYouthReduction = 100000000; // 최대 감면 한도 설정 (1억 원)
     let reducedTax = 0;
     let previousLimit = 0;
 
@@ -134,11 +135,10 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
     }
 
     reducedTax = Math.max(reducedTax, 0); // 음수 방지
-    const youthReduction = originalGiftTax - reducedTax;
+    const youthReduction = Math.min(originalGiftTax - reducedTax, maxYouthReduction); // 최대 감면 한도 적용
 
     return { reducedTax, youthReduction };
 }
-
 
 // 가산세 계산 로직
 function calculateLatePenalty(submissionDate, giftDate, giftTax) {
