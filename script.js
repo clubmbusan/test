@@ -90,11 +90,12 @@ function calculateGiftTax(taxableAmount) {
 
     let tax = 0;
 
-    // 누진세 계산 로직
     for (const bracket of taxBrackets) {
         if (taxableAmount > bracket.limit) {
+            // 현재 구간의 최대치를 계산
             tax += (bracket.limit - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
         } else {
+            // 현재 구간 내에서 남은 금액 계산
             tax += (taxableAmount - (taxBrackets[taxBrackets.indexOf(bracket) - 1]?.limit || 0)) * bracket.rate;
             tax -= bracket.deduction; // 누진 공제 적용
             break;
