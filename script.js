@@ -119,8 +119,8 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
     let reducedTax = 0;
     let previousLimit = 0;
 
+    // 누진세율 계산
     for (const bracket of taxBrackets) {
-        // 감면된 세율 적용
         let effectiveRate = Math.max(0.1, bracket.rate - 0.1); // 감면된 세율
         if (taxableAmount > bracket.limit) {
             const segmentTax = (bracket.limit - previousLimit) * effectiveRate;
@@ -135,7 +135,7 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
     }
 
     reducedTax = Math.max(reducedTax, 0); // 음수 방지
-    const youthReduction = Math.min(originalGiftTax - reducedTax, maxYouthReduction); // 최대 감면 한도 적용
+    const youthReduction = Math.min(originalGiftTax * 0.1, maxYouthReduction); // 최대 감면 한도 적용
 
     return { reducedTax, youthReduction };
 }
