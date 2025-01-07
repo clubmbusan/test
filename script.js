@@ -340,23 +340,23 @@ document.getElementById('donationTaxButton').addEventListener('click', function 
 
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
 
-// 새 코드 추가: 복합재산 유형에 따른 입력 필드 표시
+// 새 코드: 자산 유형 선택에 따라 입력 필드 표시
 document.getElementById('assetType').addEventListener('change', function () {
     const selectedType = this.value;
     const cashField = document.getElementById('cashInputField');
     const realEstateField = document.getElementById('realEstateInputField');
     const stockField = document.getElementById('stockInputField');
+    const mixedField = document.getElementById('mixedInputField');
 
-    // 모든 입력 필드를 숨김
+    // 모든 입력 필드 숨김
     cashField.style.display = 'none';
     realEstateField.style.display = 'none';
     stockField.style.display = 'none';
+    mixedField.style.display = 'none';
 
-    // 복합재산 입력 필드 활성화
-    if (selectedType === 'composite') {
-        cashField.style.display = 'block';
-        realEstateField.style.display = 'block';
-        stockField.style.display = 'block';
+    // 선택된 유형에 따라 필드 표시
+    if (selectedType === 'composite') { // 복합 재산 선택 시
+        mixedField.style.display = 'block';
     } else if (selectedType === 'cash') {
         cashField.style.display = 'block';
     } else if (selectedType === 'realEstate') {
@@ -365,30 +365,31 @@ document.getElementById('assetType').addEventListener('change', function () {
         stockField.style.display = 'block';
     }
 
-    // 총 증여 금액 초기화
-    updateTotalGiftAmount();
+    // 복합 재산 선택 시 합계 초기화
+    if (selectedType === 'composite') {
+        updateMixedTotalGiftAmount();
+    }
 });
 
-// 복합재산 합계 계산
-function updateTotalGiftAmount() {
-    const cashAmount = parseCurrency(document.getElementById('cashAmount').value || '0');
-    const realEstateValue = parseCurrency(document.getElementById('realEstateValue').value || '0');
-    const stockQuantity = parseCurrency(document.getElementById('stockQuantity').value || '0');
-    const stockPrice = parseCurrency(document.getElementById('stockPrice').value || '0');
+// 복합 재산 총합 계산
+function updateMixedTotalGiftAmount() {
+    const mixedCashAmount = parseCurrency(document.getElementById('mixedCashAmount').value || '0');
+    const mixedRealEstateValue = parseCurrency(document.getElementById('mixedRealEstateValue').value || '0');
+    const mixedStockQuantity = parseCurrency(document.getElementById('mixedStockQuantity').value || '0');
+    const mixedStockPrice = parseCurrency(document.getElementById('mixedStockPrice').value || '0');
 
     // 주식 총액 계산
-    const stockTotal = stockQuantity * stockPrice;
-    document.getElementById('stockTotal').value = stockTotal.toLocaleString(); // 총액 필드에 출력
+    const mixedStockTotal = mixedStockQuantity * mixedStockPrice;
 
-    // 총 합계 계산
-    const totalGiftAmount = cashAmount + realEstateValue + stockTotal;
+    // 총합 계산
+    const mixedTotalGiftAmount = mixedCashAmount + mixedRealEstateValue + mixedStockTotal;
 
-    // 총 증여 금액 출력
-    document.getElementById('totalGiftAmount').textContent = `${totalGiftAmount.toLocaleString()} 원`;
+    // 출력
+    document.getElementById('totalGiftAmount').textContent = `${mixedTotalGiftAmount.toLocaleString()} 원`;
 }
 
-// 각 입력 필드에 이벤트 추가 (합계 계산)
-document.getElementById('cashAmount').addEventListener('input', updateTotalGiftAmount);
-document.getElementById('realEstateValue').addEventListener('input', updateTotalGiftAmount);
-document.getElementById('stockQuantity').addEventListener('input', updateTotalGiftAmount);
-document.getElementById('stockPrice').addEventListener('input', updateTotalGiftAmount);
+// 복합 재산 입력 필드 이벤트 추가
+document.getElementById('mixedCashAmount').addEventListener('input', updateMixedTotalGiftAmount);
+document.getElementById('mixedRealEstateValue').addEventListener('input', updateMixedTotalGiftAmount);
+document.getElementById('mixedStockQuantity').addEventListener('input', updateMixedTotalGiftAmount);
+document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
