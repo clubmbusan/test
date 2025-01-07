@@ -346,7 +346,7 @@ document.getElementById('assetType').addEventListener('change', function () {
     const cashField = document.getElementById('cashInputField');
     const realEstateField = document.getElementById('realEstateInputField');
     const stockField = document.getElementById('stockInputField');
-    const mixedField = document.getElementById('mixedInputField');
+    const mixedField = document.getElementById('mixedInputField'); // mixed로 수정
 
     // 모든 입력 필드 숨김
     cashField.style.display = 'none';
@@ -355,7 +355,7 @@ document.getElementById('assetType').addEventListener('change', function () {
     mixedField.style.display = 'none';
 
     // 선택된 유형에 따라 필드 표시
-    if (selectedType === 'composite') { // 복합 재산 선택 시
+    if (selectedType === 'mixed') { // 복합 재산 선택 시
         mixedField.style.display = 'block';
     } else if (selectedType === 'cash') {
         cashField.style.display = 'block';
@@ -366,7 +366,7 @@ document.getElementById('assetType').addEventListener('change', function () {
     }
 
     // 복합 재산 선택 시 합계 초기화
-    if (selectedType === 'composite') {
+    if (selectedType === 'mixed') {
         updateMixedTotalGiftAmount();
     }
 });
