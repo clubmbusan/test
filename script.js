@@ -8,16 +8,13 @@ document.addEventListener('input', function (event) {
     const target = event.target;
 
     // 콤마 적용 대상 필드 ID
-    const applicableFields = [
-        'cashAmount',           // 현금 입력 필드
-        'realEstateValue',      // 부동산 입력 필드
-        'stockPrice',           // 주식 가격 입력 필드
-        'mixedCashAmount',      // 복합 재산: 현금
-        'mixedRealEstateValue', // 복합 재산: 부동산
-        'mixedStockPrice',      // 복합 재산: 주식 1주당 가격
-        'fatherAmountInput',    // 모달: 부 금액 입력
-        'motherAmountInput'     // 모달: 모 금액 입력
-    ];
+const applicableFields = [
+    'cashAmount',          // 현금 입력 필드
+    'realEstateValue',     // 부동산 입력 필드
+    'stockPrice',          // 주식 가격 입력 필드
+    'fatherAmountInput',   // 모달: 부 금액 입력
+    'motherAmountInput'    // 모달: 모 금액 입력
+];
 
     // 콤마 적용 여부 확인
     if (applicableFields.includes(target.id)) {
@@ -32,66 +29,24 @@ document.addEventListener('input', function (event) {
 
 // 재산 유형 선택 이벤트 리스너
 document.addEventListener('DOMContentLoaded', function () {
-    const assetType = document.getElementById('assetType');
+    const assetType = document.getElementById('assetType'); // 재산 유형 select 요소
+    assetType.addEventListener('change', function (e) {
+        const selectedType = e.target.value;
 
-    // 재산 유형 드롭다운 이벤트 추가
-    assetType.addEventListener('change', function () {
-        const selectedType = this.value;
-
-        // 각 재산 유형별 필드
         const cashField = document.getElementById('cashInputField');
         const realEstateField = document.getElementById('realEstateInputField');
         const stockField = document.getElementById('stockInputField');
-        const mixedField = document.getElementById('mixedInputField');
 
-        // 모든 입력 필드 숨김
+        // 모든 필드를 숨김 처리
         cashField.style.display = 'none';
         realEstateField.style.display = 'none';
         stockField.style.display = 'none';
-        mixedField.style.display = 'none';
 
         // 선택된 유형에 따라 필드 표시
-        if (selectedType === 'mixed') {
-            mixedField.style.display = 'block'; // 복합재산 필드 표시
-        } else if (selectedType === 'cash') {
-            cashField.style.display = 'block'; // 현금 필드 표시
-        } else if (selectedType === 'realEstate') {
-            realEstateField.style.display = 'block'; // 부동산 필드 표시
-        } else if (selectedType === 'stock') {
-            stockField.style.display = 'block'; // 주식 필드 표시
-        }
+        if (selectedType === 'cash') cashField.style.display = 'block';
+        else if (selectedType === 'realEstate') realEstateField.style.display = 'block';
+        else if (selectedType === 'stock') stockField.style.display = 'block';
     });
-
-    // 복합재산 총합 계산 함수
-    function updateMixedTotalGiftAmount() {
-        const mixedCashAmount = parseCurrency(document.getElementById('mixedCashAmount').value || '0');
-        const mixedRealEstateValue = parseCurrency(document.getElementById('mixedRealEstateValue').value || '0');
-        const mixedStockQuantity = parseCurrency(document.getElementById('mixedStockQuantity').value || '0');
-        const mixedStockPrice = parseCurrency(document.getElementById('mixedStockPrice').value || '0');
-
-        // 주식 총액 계산
-        const mixedStockTotal = mixedStockQuantity * mixedStockPrice;
-
-        // 총합 계산
-        const mixedTotalGiftAmount = mixedCashAmount + mixedRealEstateValue + mixedStockTotal;
-
-        // 총 금액 필드에 출력
-        document.getElementById('mixedTotalAmount').value = mixedTotalGiftAmount.toLocaleString();
-    }
-
-    // 복합재산 입력 필드 이벤트 추가
-    document.getElementById('mixedCashAmount').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedRealEstateValue').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedStockQuantity').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
-
-    // 계산 버튼 이벤트 리스너
-    const calculateButton = document.getElementById('calculateButton');
-    if (calculateButton) {
-        calculateButton.addEventListener('click', calculateFinalTax);
-    } else {
-        console.error('calculateButton 요소를 찾을 수 없습니다.');
-    }
 });
 
 // 관계별 공제 한도 계산
@@ -290,21 +245,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 계산 버튼 이벤트
     document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
-
-    // 증여세 신고 버튼 이벤트
-    document.getElementById('donationTaxButton').addEventListener('click', function () {
-    const giftDateContainer = document.getElementById('giftDateContainer');
-    const submissionDateContainer = document.getElementById('submissionDateContainer');
-    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
-
-    // 현재 상태 확인 후 표시/숨김 전환
-    const isVisible = giftDateContainer.style.display === 'block';
-    const newDisplay = isVisible ? 'none' : 'block';
-
-    // 각 컨테이너에 새 상태 적용
-    giftDateContainer.style.display = newDisplay;
-    submissionDateContainer.style.display = newDisplay;
-    extendedPeriodContainer.style.display = newDisplay;
 });
 
 // 결혼 공제 계산 함수
@@ -383,7 +323,20 @@ function calculateFinalTax() {
     `;
 }
 
+// 증여세 신고 버튼 이벤트
+document.getElementById('donationTaxButton').addEventListener('click', function () {
+    const giftDateContainer = document.getElementById('giftDateContainer');
+    const submissionDateContainer = document.getElementById('submissionDateContainer');
+    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
+
+    // 숨김/표시 토글
+    const isVisible = giftDateContainer.style.display === 'block';
+    const newDisplay = isVisible ? 'none' : 'block';
+
+    giftDateContainer.style.display = newDisplay;
+    submissionDateContainer.style.display = newDisplay;
+    extendedPeriodContainer.style.display = newDisplay;
+});
+
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
-}); 
-    
                           
