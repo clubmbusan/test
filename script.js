@@ -81,11 +81,11 @@ function getGiftAmount() {
 // 누진세 계산 함수 (청년 여부 상관없이 계산)
 function calculateGiftTax(taxableAmount) {
     const taxBrackets = [
-        { limit: 200000000, rate: 0.1, deduction: 0 },
-        { limit: 500000000, rate: 0.2, deduction: 20000000 },
-        { limit: 1000000000, rate: 0.3, deduction: 70000000 },
-        { limit: 2000000000, rate: 0.4, deduction: 170000000 },
-        { limit: Infinity, rate: 0.45, deduction: 370000000 },
+        { limit: 200000000, rate: 0.1, deduction: 0 },        // 2억 이하
+        { limit: 500000000, rate: 0.2, deduction: 20000000 }, // 2억 초과 ~ 5억 이하
+        { limit: 1000000000, rate: 0.3, deduction: 70000000 }, // 5억 초과 ~ 10억 이하
+        { limit: 2000000000, rate: 0.4, deduction: 170000000 }, // 10억 초과 ~ 20억 이하
+        { limit: Infinity, rate: 0.45, deduction: 370000000 },  // 20억 초과
     ];
 
     let tax = 0;
@@ -103,15 +103,18 @@ function calculateGiftTax(taxableAmount) {
             const segmentTax = (taxableAmount - previousLimit) * bracket.rate;
             tax += segmentTax;
             console.log(`최종 구간: ${taxableAmount}, 세율: ${bracket.rate}, 세금 추가: ${segmentTax}`);
-            tax -= bracket.deduction; // 누진 공제 적용
+            // 누진 공제는 마지막 구간에서만 적용
+            tax -= bracket.deduction;
             console.log(`누진 공제: ${bracket.deduction}, 최종 세금: ${tax}`);
             break;
         }
     }
 
+    tax = Math.max(tax, 0); // 음수 방지
     console.log(`최종 계산된 세금: ${tax}`);
-    return Math.max(tax, 0);
+    return tax;
 }
+
 
 // 청년 감면 적용 (누진 공제 반영)
 function applyYouthReduction(taxableAmount, originalGiftTax) {
@@ -138,7 +141,8 @@ function applyYouthReduction(taxableAmount, originalGiftTax) {
         } else {
             const segmentTax = (taxableAmount - previousLimit) * effectiveRate;
             reducedTax += segmentTax;
-            reducedTax -= bracket.deduction; // 누진 공제 적용
+            // 누진 공제는 마지막 구간에서만 적용
+            reducedTax -= bracket.deduction;
             console.log(`최종 구간: ${taxableAmount}, 감면 세율: ${effectiveRate}, 세금 추가: ${segmentTax}, 누진 공제: ${bracket.deduction}, 총 감면된 세금: ${reducedTax}`);
             break;
         }
