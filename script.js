@@ -29,24 +29,56 @@ const applicableFields = [
 
 // 재산 유형 선택 이벤트 리스너
 document.addEventListener('DOMContentLoaded', function () {
-    const assetType = document.getElementById('assetType'); // 재산 유형 select 요소
-    assetType.addEventListener('change', function (e) {
-        const selectedType = e.target.value;
+    const assetType = document.getElementById('assetType');
 
+    // 재산 유형 드롭다운 이벤트 추가
+    assetType.addEventListener('change', function () {
+        const selectedType = this.value;
         const cashField = document.getElementById('cashInputField');
         const realEstateField = document.getElementById('realEstateInputField');
         const stockField = document.getElementById('stockInputField');
+        const mixedField = document.getElementById('mixedInputField');
 
-        // 모든 필드를 숨김 처리
+        // 모든 입력 필드 숨김
         cashField.style.display = 'none';
         realEstateField.style.display = 'none';
         stockField.style.display = 'none';
+        mixedField.style.display = 'none';
 
         // 선택된 유형에 따라 필드 표시
-        if (selectedType === 'cash') cashField.style.display = 'block';
-        else if (selectedType === 'realEstate') realEstateField.style.display = 'block';
-        else if (selectedType === 'stock') stockField.style.display = 'block';
+        if (selectedType === 'mixed') {
+            mixedField.style.display = 'block';
+        } else if (selectedType === 'cash') {
+            cashField.style.display = 'block';
+        } else if (selectedType === 'realEstate') {
+            realEstateField.style.display = 'block';
+        } else if (selectedType === 'stock') {
+            stockField.style.display = 'block';
+        }
     });
+
+    // 복합 재산 총합 계산
+    function updateMixedTotalGiftAmount() {
+        const mixedCashAmount = parseCurrency(document.getElementById('mixedCashAmount').value || '0');
+        const mixedRealEstateValue = parseCurrency(document.getElementById('mixedRealEstateValue').value || '0');
+        const mixedStockQuantity = parseCurrency(document.getElementById('mixedStockQuantity').value || '0');
+        const mixedStockPrice = parseCurrency(document.getElementById('mixedStockPrice').value || '0');
+
+        // 주식 총액 계산
+        const mixedStockTotal = mixedStockQuantity * mixedStockPrice;
+
+        // 총합 계산
+        const mixedTotalGiftAmount = mixedCashAmount + mixedRealEstateValue + mixedStockTotal;
+
+        // 출력
+        document.getElementById('totalGiftAmount').textContent = `${mixedTotalGiftAmount.toLocaleString()} 원`;
+    }
+
+    // 복합 재산 입력 필드 이벤트 추가
+    document.getElementById('mixedCashAmount').addEventListener('input', updateMixedTotalGiftAmount);
+    document.getElementById('mixedRealEstateValue').addEventListener('input', updateMixedTotalGiftAmount);
+    document.getElementById('mixedStockQuantity').addEventListener('input', updateMixedTotalGiftAmount);
+    document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
 });
 
 // 관계별 공제 한도 계산
@@ -323,71 +355,20 @@ function calculateFinalTax() {
     `;
 }
 
-// 새 코드: 자산 유형 선택에 따라 입력 필드 표시
-document.addEventListener('DOMContentLoaded', function () {
-    // 자산 유형 선택에 따른 입력 필드 표시
-    document.getElementById('assetType').addEventListener('change', function () {
-        const selectedType = this.value;
-        const cashField = document.getElementById('cashInputField');
-        const realEstateField = document.getElementById('realEstateInputField');
-        const stockField = document.getElementById('stockInputField');
-        const mixedField = document.getElementById('mixedInputField');
+// 증여세 신고 버튼 이벤트
+document.getElementById('donationTaxButton').addEventListener('click', function () {
+    const giftDateContainer = document.getElementById('giftDateContainer');
+    const submissionDateContainer = document.getElementById('submissionDateContainer');
+    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
 
-        // 모든 입력 필드 숨김
-        cashField.style.display = 'none';
-        realEstateField.style.display = 'none';
-        stockField.style.display = 'none';
-        mixedField.style.display = 'none';
+    // 숨김/표시 토글
+    const isVisible = giftDateContainer.style.display === 'block';
+    const newDisplay = isVisible ? 'none' : 'block';
 
-        // 선택된 유형에 따라 필드 표시
-        if (selectedType === 'mixed') {
-            mixedField.style.display = 'block';
-        } else if (selectedType === 'cash') {
-            cashField.style.display = 'block';
-        } else if (selectedType === 'realEstate') {
-            realEstateField.style.display = 'block';
-        } else if (selectedType === 'stock') {
-            stockField.style.display = 'block';
-        }
-    });
-
-    // 복합 재산 총합 계산
-    function updateMixedTotalGiftAmount() {
-        const mixedCashAmount = parseCurrency(document.getElementById('mixedCashAmount').value || '0');
-        const mixedRealEstateValue = parseCurrency(document.getElementById('mixedRealEstateValue').value || '0');
-        const mixedStockQuantity = parseCurrency(document.getElementById('mixedStockQuantity').value || '0');
-        const mixedStockPrice = parseCurrency(document.getElementById('mixedStockPrice').value || '0');
-
-        // 주식 총액 계산
-        const mixedStockTotal = mixedStockQuantity * mixedStockPrice;
-
-        // 총합 계산
-        const mixedTotalGiftAmount = mixedCashAmount + mixedRealEstateValue + mixedStockTotal;
-
-        // 출력
-        document.getElementById('totalGiftAmount').textContent = `${mixedTotalGiftAmount.toLocaleString()} 원`;
-    }
-
-    // 복합 재산 입력 필드 이벤트 추가
-    document.getElementById('mixedCashAmount').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedRealEstateValue').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedStockQuantity').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
-
-    // 증여세 신고 버튼 이벤트
-    document.getElementById('donationTaxButton').addEventListener('click', function () {
-        const giftDateContainer = document.getElementById('giftDateContainer');
-        const submissionDateContainer = document.getElementById('submissionDateContainer');
-        const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
-
-        // 숨김/표시 토글
-        const isVisible = giftDateContainer.style.display === 'block';
-        const newDisplay = isVisible ? 'none' : 'block';
-
-        giftDateContainer.style.display = newDisplay;
-        submissionDateContainer.style.display = newDisplay;
-        extendedPeriodContainer.style.display = newDisplay;
-    });
-
-    document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
+    giftDateContainer.style.display = newDisplay;
+    submissionDateContainer.style.display = newDisplay;
+    extendedPeriodContainer.style.display = newDisplay;
 });
+
+document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
+                          
