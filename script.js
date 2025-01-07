@@ -8,13 +8,16 @@ document.addEventListener('input', function (event) {
     const target = event.target;
 
     // 콤마 적용 대상 필드 ID
-const applicableFields = [
-    'cashAmount',          // 현금 입력 필드
-    'realEstateValue',     // 부동산 입력 필드
-    'stockPrice',          // 주식 가격 입력 필드
-    'fatherAmountInput',   // 모달: 부 금액 입력
-    'motherAmountInput'    // 모달: 모 금액 입력
-];
+    const applicableFields = [
+        'cashAmount',           // 현금 입력 필드
+        'realEstateValue',      // 부동산 입력 필드
+        'stockPrice',           // 주식 가격 입력 필드
+        'mixedCashAmount',      // 복합 재산: 현금
+        'mixedRealEstateValue', // 복합 재산: 부동산
+        'mixedStockPrice',      // 복합 재산: 주식 1주당 가격
+        'fatherAmountInput',    // 모달: 부 금액 입력
+        'motherAmountInput'     // 모달: 모 금액 입력
+    ];
 
     // 콤마 적용 여부 확인
     if (applicableFields.includes(target.id)) {
@@ -81,6 +84,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('mixedRealEstateValue').addEventListener('input', updateMixedTotalGiftAmount);
     document.getElementById('mixedStockQuantity').addEventListener('input', updateMixedTotalGiftAmount);
     document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
+
+    // 계산 버튼 이벤트 리스너
+    const calculateButton = document.getElementById('calculateButton');
+    if (calculateButton) {
+        calculateButton.addEventListener('click', calculateFinalTax);
+    } else {
+        console.error('calculateButton 요소를 찾을 수 없습니다.');
+    }
 });
 
 // 관계별 공제 한도 계산
