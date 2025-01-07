@@ -384,4 +384,6 @@ function calculateFinalTax() {
 }
 
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
+}); 
+    
                           
