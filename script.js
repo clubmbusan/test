@@ -339,4 +339,56 @@ document.getElementById('donationTaxButton').addEventListener('click', function 
 });
 
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
-                          
+
+// 새 코드 추가: 복합재산 유형에 따른 입력 필드 표시
+document.getElementById('assetType').addEventListener('change', function () {
+    const selectedType = this.value;
+    const cashField = document.getElementById('cashInputField');
+    const realEstateField = document.getElementById('realEstateInputField');
+    const stockField = document.getElementById('stockInputField');
+
+    // 모든 입력 필드를 숨김
+    cashField.style.display = 'none';
+    realEstateField.style.display = 'none';
+    stockField.style.display = 'none';
+
+    // 복합재산 입력 필드 활성화
+    if (selectedType === 'composite') {
+        cashField.style.display = 'block';
+        realEstateField.style.display = 'block';
+        stockField.style.display = 'block';
+    } else if (selectedType === 'cash') {
+        cashField.style.display = 'block';
+    } else if (selectedType === 'realEstate') {
+        realEstateField.style.display = 'block';
+    } else if (selectedType === 'stock') {
+        stockField.style.display = 'block';
+    }
+
+    // 총 증여 금액 초기화
+    updateTotalGiftAmount();
+});
+
+// 복합재산 합계 계산
+function updateTotalGiftAmount() {
+    const cashAmount = parseCurrency(document.getElementById('cashAmount').value || '0');
+    const realEstateValue = parseCurrency(document.getElementById('realEstateValue').value || '0');
+    const stockQuantity = parseCurrency(document.getElementById('stockQuantity').value || '0');
+    const stockPrice = parseCurrency(document.getElementById('stockPrice').value || '0');
+
+    // 주식 총액 계산
+    const stockTotal = stockQuantity * stockPrice;
+    document.getElementById('stockTotal').value = stockTotal.toLocaleString(); // 총액 필드에 출력
+
+    // 총 합계 계산
+    const totalGiftAmount = cashAmount + realEstateValue + stockTotal;
+
+    // 총 증여 금액 출력
+    document.getElementById('totalGiftAmount').textContent = `${totalGiftAmount.toLocaleString()} 원`;
+}
+
+// 각 입력 필드에 이벤트 추가 (합계 계산)
+document.getElementById('cashAmount').addEventListener('input', updateTotalGiftAmount);
+document.getElementById('realEstateValue').addEventListener('input', updateTotalGiftAmount);
+document.getElementById('stockQuantity').addEventListener('input', updateTotalGiftAmount);
+document.getElementById('stockPrice').addEventListener('input', updateTotalGiftAmount);
