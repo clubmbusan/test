@@ -292,15 +292,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
 
     // 증여세 신고 버튼 이벤트
-document.getElementById('donationTaxButton').addEventListener('click', function () {
+    document.getElementById('donationTaxButton').addEventListener('click', function () {
     const giftDateContainer = document.getElementById('giftDateContainer');
     const submissionDateContainer = document.getElementById('submissionDateContainer');
     const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
 
-    // 숨김/표시 토글
+    // 현재 상태 확인 후 표시/숨김 전환
     const isVisible = giftDateContainer.style.display === 'block';
     const newDisplay = isVisible ? 'none' : 'block';
 
+    // 각 컨테이너에 새 상태 적용
     giftDateContainer.style.display = newDisplay;
     submissionDateContainer.style.display = newDisplay;
     extendedPeriodContainer.style.display = newDisplay;
