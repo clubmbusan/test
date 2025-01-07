@@ -28,7 +28,6 @@ const applicableFields = [
 });
 
 // 재산 유형 선택 이벤트 리스너
-// 재산 유형 선택 이벤트 리스너
 document.addEventListener('DOMContentLoaded', function () {
     const assetType = document.getElementById('assetType');
 
