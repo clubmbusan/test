@@ -290,6 +290,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 계산 버튼 이벤트
     document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
+
+    // 증여세 신고 버튼 이벤트
+document.getElementById('donationTaxButton').addEventListener('click', function () {
+    const giftDateContainer = document.getElementById('giftDateContainer');
+    const submissionDateContainer = document.getElementById('submissionDateContainer');
+    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
+
+    // 숨김/표시 토글
+    const isVisible = giftDateContainer.style.display === 'block';
+    const newDisplay = isVisible ? 'none' : 'block';
+
+    giftDateContainer.style.display = newDisplay;
+    submissionDateContainer.style.display = newDisplay;
+    extendedPeriodContainer.style.display = newDisplay;
 });
 
 // 결혼 공제 계산 함수
@@ -367,21 +381,6 @@ function calculateFinalTax() {
         <p><strong>최종 납부세액: ${(totalTax).toLocaleString()} 원</strong></p>
     `;
 }
-
-// 증여세 신고 버튼 이벤트
-document.getElementById('donationTaxButton').addEventListener('click', function () {
-    const giftDateContainer = document.getElementById('giftDateContainer');
-    const submissionDateContainer = document.getElementById('submissionDateContainer');
-    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
-
-    // 숨김/표시 토글
-    const isVisible = giftDateContainer.style.display === 'block';
-    const newDisplay = isVisible ? 'none' : 'block';
-
-    giftDateContainer.style.display = newDisplay;
-    submissionDateContainer.style.display = newDisplay;
-    extendedPeriodContainer.style.display = newDisplay;
-});
 
 document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
                           
