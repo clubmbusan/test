@@ -111,7 +111,6 @@ function applyYouthReduction(originalGiftTax) {
     const reductionAmount = originalGiftTax * 0.1; // 감면액 계산
     const reducedTax = originalGiftTax - reductionAmount; // 감면 후 세금 계산
 
-    console.log(`청년 감면 적용: 원래 세금=${originalGiftTax}, 감면액=${reductionAmount}, 감면 후 세금=${reducedTax}`);
     return { reducedTax, reductionAmount };
 }
 
@@ -293,9 +292,11 @@ function calculateFinalTax() {
     let finalGiftTax = originalGiftTax;
 
     if (isYouth) {
-        const { reducedTax, youthReduction: reductionAmount } = applyYouthReduction(taxableAmount, originalGiftTax);
-        youthReduction = reductionAmount;
-        finalGiftTax = reducedTax;
+        const reductionResult = applyYouthReduction(originalGiftTax); // 청년 감면 함수 호출
+        if (reductionResult) {
+            youthReduction = reductionResult.reductionAmount || 0; // 감면액 적용
+            finalGiftTax = reductionResult.reducedTax || originalGiftTax; // 감면 후 세금 적용
+        }
     }
 
     // 가산세 계산
