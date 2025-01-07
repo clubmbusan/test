@@ -29,7 +29,7 @@ const applicableFields = [
 
 // 재산 유형 선택 이벤트 리스너
 document.addEventListener('DOMContentLoaded', function () {
-    const assetType = document.getElementById('assetType');
+    const assetType = document.getElementById('assetType'); // 재산 유형 드롭다운
 
     // 재산 유형 드롭다운 이벤트 추가
     assetType.addEventListener('change', function () {
@@ -38,16 +38,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const realEstateField = document.getElementById('realEstateInputField');
         const stockField = document.getElementById('stockInputField');
         const mixedField = document.getElementById('mixedInputField');
+        const totalGiftAmountField = document.getElementById('totalGiftAmount'); // 총합 출력 필드
 
         // 모든 입력 필드 숨김
         cashField.style.display = 'none';
         realEstateField.style.display = 'none';
         stockField.style.display = 'none';
         mixedField.style.display = 'none';
+        totalGiftAmountField.style.display = 'none'; // 총합 출력 필드도 숨김
 
         // 선택된 유형에 따라 필드 표시
         if (selectedType === 'mixed') {
             mixedField.style.display = 'block';
+            totalGiftAmountField.style.display = 'block'; // 복합 재산의 경우 총합 필드 표시
         } else if (selectedType === 'cash') {
             cashField.style.display = 'block';
         } else if (selectedType === 'realEstate') {
