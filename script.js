@@ -88,7 +88,7 @@ function calculateGiftTax(taxableAmount) {
         { limit: Infinity, rate: 0.45, deduction: 370000000 },
     ];
 
-    let tax = 0;
+    let tax = 0; // 누적 세금
     let previousLimit = 0;
 
     console.log(`calculateGiftTax 함수 실행: 과세 금액=${taxableAmount}`);
@@ -103,7 +103,7 @@ function calculateGiftTax(taxableAmount) {
             const segmentTax = (taxableAmount - previousLimit) * bracket.rate;
             tax += segmentTax;
             console.log(`최종 구간: ${taxableAmount}, 세율: ${bracket.rate}, 세금 추가: ${segmentTax}`);
-            // 누진 공제는 마지막 구간에서 한 번만 적용
+            // 마지막 구간에서 누진 공제 적용
             tax -= bracket.deduction;
             console.log(`누진 공제: ${bracket.deduction}, 최종 세금: ${tax}`);
             break;
