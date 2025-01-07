@@ -84,8 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
 });
 
-});
-
 // 관계별 공제 한도 계산
 function getExemptionAmount(relationship) {
     const exemptions = {
