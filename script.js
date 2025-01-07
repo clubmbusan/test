@@ -323,23 +323,6 @@ function calculateFinalTax() {
     `;
 }
 
-// 증여세 신고 버튼 이벤트
-document.getElementById('donationTaxButton').addEventListener('click', function () {
-    const giftDateContainer = document.getElementById('giftDateContainer');
-    const submissionDateContainer = document.getElementById('submissionDateContainer');
-    const extendedPeriodContainer = document.getElementById('extendedPeriodContainer');
-
-    // 숨김/표시 토글
-    const isVisible = giftDateContainer.style.display === 'block';
-    const newDisplay = isVisible ? 'none' : 'block';
-
-    giftDateContainer.style.display = newDisplay;
-    submissionDateContainer.style.display = newDisplay;
-    extendedPeriodContainer.style.display = newDisplay;
-});
-
-document.getElementById('calculateButton').addEventListener('click', calculateFinalTax);
-
 // 새 코드: 자산 유형 선택에 따라 입력 필드 표시
 document.addEventListener('DOMContentLoaded', function () {
     // 자산 유형 선택에 따른 입력 필드 표시
