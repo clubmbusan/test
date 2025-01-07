@@ -61,27 +61,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 복합 재산 총합 계산
-    function updateMixedTotalGiftAmount() {
-        const mixedCashAmount = parseCurrency(document.getElementById('mixedCashAmount').value || '0');
-        const mixedRealEstateValue = parseCurrency(document.getElementById('mixedRealEstateValue').value || '0');
-        const mixedStockQuantity = parseCurrency(document.getElementById('mixedStockQuantity').value || '0');
-        const mixedStockPrice = parseCurrency(document.getElementById('mixedStockPrice').value || '0');
+  function updateMixedTotalGiftAmount() {
+    const mixedCashAmount = parseCurrency(document.getElementById('mixedCashAmount').value || '0');
+    const mixedRealEstateValue = parseCurrency(document.getElementById('mixedRealEstateValue').value || '0');
+    const mixedStockQuantity = parseCurrency(document.getElementById('mixedStockQuantity').value || '0');
+    const mixedStockPrice = parseCurrency(document.getElementById('mixedStockPrice').value || '0');
 
-        // 주식 총액 계산
-        const mixedStockTotal = mixedStockQuantity * mixedStockPrice;
+    // 주식 총액 계산
+    const mixedStockTotal = mixedStockQuantity * mixedStockPrice;
 
-        // 총합 계산
-        const mixedTotalGiftAmount = mixedCashAmount + mixedRealEstateValue + mixedStockTotal;
+    // 총합 계산
+    const mixedTotalGiftAmount = mixedCashAmount + mixedRealEstateValue + mixedStockTotal;
 
-        // 출력
-        document.getElementById('totalGiftAmount').textContent = `${mixedTotalGiftAmount.toLocaleString()} 원`;
-    }
+    // 총 금액 필드에 출력
+    document.getElementById('mixedTotalAmount').value = `${mixedTotalGiftAmount.toLocaleString()}`;
+}
 
-    // 복합 재산 입력 필드 이벤트 추가
-    document.getElementById('mixedCashAmount').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedRealEstateValue').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedStockQuantity').addEventListener('input', updateMixedTotalGiftAmount);
-    document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
+// 복합 재산 입력 필드에 이벤트 추가
+document.getElementById('mixedCashAmount').addEventListener('input', updateMixedTotalGiftAmount);
+document.getElementById('mixedRealEstateValue').addEventListener('input', updateMixedTotalGiftAmount);
+document.getElementById('mixedStockQuantity').addEventListener('input', updateMixedTotalGiftAmount);
+document.getElementById('mixedStockPrice').addEventListener('input', updateMixedTotalGiftAmount);
 });
 
 // 관계별 공제 한도 계산
