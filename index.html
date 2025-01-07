@@ -46,25 +46,26 @@
                     <input type="text" id="stockTotal" readonly placeholder="자동 계산됨">
                 </div>
 
-              <!-- 복합 재산 입력 -->
-          <div id="mixedInputField" style="display: none;">
-              <label for="mixedCashAmount">현금 금액 (원):</label>
-              <input type="text" id="mixedCashAmount" placeholder="예: 10,000,000">
-    
-              <label for="mixedRealEstateValue">부동산 평가액 (원):</label>
-              <input type="text" id="mixedRealEstateValue" placeholder="예: 100,000,000">
-    
-              <label for="mixedStockQuantity">주식 매수량:</label>
-              <input type="number" id="mixedStockQuantity" placeholder="예: 100">
-    
-              <label for="mixedStockPrice">주식 1주당 가격 (원):</label>
-              <input type="text" id="mixedStockPrice" placeholder="예: 10,000">
+                <!-- 복합 재산 입력 -->
+                <div id="mixedInputField" style="display: none;">
+                    <label for="mixedCashAmount">현금 금액 (원):</label>
+                    <input type="text" id="mixedCashAmount" placeholder="예: 10,000,000">
 
-              <!-- 복합 재산 총합 금액 필드 -->
-              <label for="mixedTotalAmount">총 금액 (원):</label>
-              <input type="text" id="mixedTotalAmount" readonly placeholder="자동 계산됨">
-           </div>
-                
+                    <label for="mixedRealEstateValue">부동산 평가액 (원):</label>
+                    <input type="text" id="mixedRealEstateValue" placeholder="예: 100,000,000">
+
+                    <label for="mixedStockQuantity">주식 매수량:</label>
+                    <input type="number" id="mixedStockQuantity" placeholder="예: 100">
+
+                    <label for="mixedStockPrice">주식 1주당 가격 (원):</label>
+                    <input type="text" id="mixedStockPrice" placeholder="예: 10,000">
+
+                    <!-- 복합 재산 총합 금액 필드 -->
+                    <label for="mixedTotalAmount">총 금액 (원):</label>
+                    <input type="text" id="mixedTotalAmount" readonly placeholder="자동 계산됨">
+                </div>
+            </div>
+
             <!-- 청년 증여 여부 드롭다운 -->
             <label for="isYouthDropdown">청년 증여 여부:</label>
             <select id="isYouthDropdown" name="isYouthDropdown">
@@ -82,28 +83,28 @@
                 <option value="sonInLawDaughterInLaw">사위/며느리 - 공제 한도: 50,000,000원</option>
                 <option value="other">타인(친구, 친인척 등) - 공제 한도: 10,000,000원</option>
             </select>
-           
-                <!-- 결혼 증여 입력 버튼 -->
-<button id="marriageGiftButton" type="button">결혼 증여</button>
 
-<!-- 결혼 증여 입력 모달 -->
-<div id="marriageGiftModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-    <h3>결혼 증여 입력</h3>
+            <!-- 결혼 증여 입력 버튼 -->
+            <button id="marriageGiftButton" type="button">결혼 증여</button>
 
-    <!-- 부모 금액 입력 -->
-    <label for="fatherAmountInput">부 증여 금액 (원):</label>
-    <input type="text" id="fatherAmountInput" placeholder="예: 10,000,000">
+            <!-- 결혼 증여 입력 모달 -->
+            <div id="marriageGiftModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                <h3>결혼 증여 입력</h3>
 
-    <label for="motherAmountInput">모 증여 금액 (원):</label>
-    <input type="text" id="motherAmountInput" placeholder="예: 10,000,000">
+                <!-- 부모 금액 입력 -->
+                <label for="fatherAmountInput">부 증여 금액 (원):</label>
+                <input type="text" id="fatherAmountInput" placeholder="예: 10,000,000">
 
-    <!-- 남은 금액 표시 -->
-    <p>남은 금액: <span id="remainingAmount">0 원</span></p>
+                <label for="motherAmountInput">모 증여 금액 (원):</label>
+                <input type="text" id="motherAmountInput" placeholder="예: 10,000,000">
 
-    <!-- 버튼 -->
-    <button id="saveMarriageGiftButton" type="button">저장</button>
-    <button id="closeMarriageGiftModal" type="button">닫기</button>
-</div>
+                <!-- 남은 금액 표시 -->
+                <p>남은 금액: <span id="remainingAmount">0 원</span></p>
+
+                <!-- 버튼 -->
+                <button id="saveMarriageGiftButton" type="button">저장</button>
+                <button id="closeMarriageGiftModal" type="button">닫기</button>
+            </div>
 
             <!-- 과거 증여 금액 -->
             <div id="previousGifts"></div>
@@ -111,6 +112,9 @@
 
             <!-- 계산하기 버튼 -->
             <button type="button" id="calculateButton">계산하기</button>
+
+            <!-- 증여세 신고 버튼 -->
+            <button type="button" id="donationTaxButton">증여세 신고</button>
         </form>
 
         <!-- 결과 -->
