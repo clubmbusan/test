@@ -31,7 +31,6 @@ const applicableFields = [
 });
 
 // 재산 유형 선택 이벤트 리스너
-// 재산 유형 선택 이벤트 리스너
 document.addEventListener('DOMContentLoaded', function () {
     const assetType = document.getElementById('assetType');
 
@@ -109,10 +108,21 @@ function getGiftAmount() {
     } else if (selectedType === 'realEstate') {
         giftAmount = parseCurrency(document.getElementById('realEstateValue').value || '0');
     } else if (selectedType === 'stock') {
-        const stockQuantity = parseInt(document.getElementById('stockQuantity').value || '0', 10);
+        const stockQuantity = parseCurrency(document.getElementById('stockQuantity').value || '0');
         const stockPrice = parseCurrency(document.getElementById('stockPrice').value || '0');
         giftAmount = stockQuantity * stockPrice;
+    } else if (selectedType === 'mixed') {
+        // 복합 재산 계산 로직 추가
+        const mixedCashAmount = parseCurrency(document.getElementById('mixedCashAmount').value || '0');
+        const mixedRealEstateValue = parseCurrency(document.getElementById('mixedRealEstateValue').value || '0');
+        const mixedStockQuantity = parseCurrency(document.getElementById('mixedStockQuantity').value || '0');
+        const mixedStockPrice = parseCurrency(document.getElementById('mixedStockPrice').value || '0');
+
+        // 복합 재산 총합 계산
+        const mixedStockTotal = mixedStockQuantity * mixedStockPrice;
+        giftAmount = mixedCashAmount + mixedRealEstateValue + mixedStockTotal;
     }
+
     return giftAmount;
 }
 
