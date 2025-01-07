@@ -12,6 +12,9 @@ const applicableFields = [
     'cashAmount',          // 현금 입력 필드
     'realEstateValue',     // 부동산 입력 필드
     'stockPrice',          // 주식 가격 입력 필드
+    'mixedCashAmount',      // 복합 재산: 현금
+    'mixedRealEstateValue', // 복합 재산: 부동산
+    'mixedStockPrice',      // 복합 재산: 주식 1주당 가격
     'fatherAmountInput',   // 모달: 부 금액 입력
     'motherAmountInput'    // 모달: 모 금액 입력
 ];
